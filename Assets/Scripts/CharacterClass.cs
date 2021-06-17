@@ -22,4 +22,6 @@ public abstract class CharacterClass
         Shadow      //purple
     }
 
+    protected List<string> Skills { get; set; }     //TODO: should be a collection of Skill objects instead of string
+
 }
