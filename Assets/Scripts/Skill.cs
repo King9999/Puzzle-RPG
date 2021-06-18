@@ -5,20 +5,24 @@ using UnityEngine;
 //base class for all skills in the game
 public class Skill
 {
-   protected string Name { get; set; }
-   protected int[] ManaCost { get; set; }  //5 different values, one for each colour (element)
-   protected float Cooldown { get; set; }   //How much time must pass before player can use skill again
+   public string Name { get; set; }
+    public int[] ManaCost { get; set; } = new int[MAX_ELEMENTS]; //5 different values, one for each colour (element)
+   public float Cooldown { get; set; }   //Amount of time in seconds that must pass before player can use skill again
 
-    protected float CurrentTime { get; set; }
-    protected enum SkillType
+    public float Multiplier { get; set; } = 1;   //adjusts the strength of ELP
+
+    public int HitCount { get; set; } = 1;       //determines how many times a skill executes
+
+    protected float CurrentTime { get; set; }       //gets current time to enable cooldowns
+    public enum SkillType
     {
         Active,     
         Passive     //passives have no cost and are always on.
     }
 
-    protected SkillType SkillProperty { get; set; }
+    public SkillType SkillProperty { get; set; } = SkillType.Active;
 
-    protected enum Element
+    public enum Element
     {
         Fire,
         Water,
@@ -26,6 +30,8 @@ public class Skill
         Light,
         Shadow
     }
+
+    public Element SkillElement { get; set; }
 
     //constants
     const int MAX_ELEMENTS = 5;
@@ -66,19 +72,19 @@ public class Skill
     }
 
     // The following method must be overloaded because different skills have different targets.
-    protected virtual void UseSkill(CharacterClass caster, CharacterClass target)
+    public virtual void UseSkill(CharacterClass caster, CharacterClass target)
     {
         //get timestamp to start the cooldown
         CurrentTime = Time.time;
     }
 
-    protected virtual void UseSkill(CharacterClass caster)  //used when skill is being used on the caster only
+    public virtual void UseSkill(CharacterClass caster)  //used when skill is being used on the caster only
     {
         //get timestamp to start the cooldown
         CurrentTime = Time.time;
     }
 
-    protected virtual void UseSkill(CharacterClass caster, CharacterClass[] target) //used against all targets. Probably not using this one yet.
+    public virtual void UseSkill(CharacterClass caster, CharacterClass[] target) //used against all targets. Probably not using this one yet.
     {
         //get timestamp to start the cooldown
         CurrentTime = Time.time;
