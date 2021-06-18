@@ -6,15 +6,15 @@ public class Heal : Skill
 {
     public Heal()
     {
-        Name = "Heal";
-        ManaCost[(int)Element.Fire] = 0;
-        ManaCost[(int)Element.Water] = 0;
-        ManaCost[(int)Element.Earth] = 0;
-        ManaCost[(int)Element.Light] = 20;
-        ManaCost[(int)Element.Shadow] = 0;
-        Cooldown = 10;
-        Multiplier = 2.2f;
-        SkillElement = Element.Light;
+        name = "Heal";
+        manaCost[(int)Element.Fire] = 0;
+        manaCost[(int)Element.Water] = 0;
+        manaCost[(int)Element.Earth] = 0;
+        manaCost[(int)Element.Light] = 20;
+        manaCost[(int)Element.Shadow] = 0;
+        cooldown = 10;
+        multiplier = 2.2f;
+        skillElement = Element.Light;
     }
 
     public override void UseSkill(CharacterClass self)
@@ -25,15 +25,15 @@ public class Heal : Skill
             return;
         }
         
-        int restoreAmount = (int)(self.ElementalPower[(int)SkillElement] * Multiplier + Random.Range(0, self.ElementalPower[(int)SkillElement] * 0.25f));
-        self.HealthPoints += restoreAmount;
-        if (self.HealthPoints > self.MaxHealthPoints)
-            self.HealthPoints = self.MaxHealthPoints;
+        int restoreAmount = (int)(self.elementalPower[(int)skillElement] * multiplier + Random.Range(0, self.elementalPower[(int)skillElement] * 0.25f));
+        self.healthPoints += restoreAmount;
+        if (self.healthPoints > self.maxHealthPoints)
+            self.healthPoints = self.maxHealthPoints;
 
         //TODO: display the amount of HP restored in game
 
         Debug.Log("Restored " + restoreAmount + " HP");
-        CurrentTime = Time.time;
+        currentTime = Time.time;
     }
 
     

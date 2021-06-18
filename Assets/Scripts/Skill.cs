@@ -5,15 +5,15 @@ using UnityEngine;
 //base class for all skills in the game
 public class Skill : MonoBehaviour
 {
-    public string Name; 
-    public int[] ManaCost  = new int[MAX_ELEMENTS]; //5 different values, one for each colour (element)
-    public float Cooldown;    //Amount of time in seconds that must pass before player can use skill again
+    public new string name; 
+    public int[] manaCost  = new int[MAX_ELEMENTS]; //5 different values, one for each colour (element)
+    public float cooldown;    //Amount of time in seconds that must pass before player can use skill again
 
-    public float Multiplier  = 1;   //adjusts the strength of ELP
+    public float multiplier  = 1;   //adjusts the strength of ELP
 
-    public int HitCount  = 1;       //determines how many times a skill executes
+    public int hitCount  = 1;       //determines how many times a skill executes
 
-    protected float CurrentTime;        //gets current time to enable cooldowns
+    protected float currentTime;        //gets current time to enable cooldowns
     public enum SkillType
     {
         Active,     
@@ -31,7 +31,7 @@ public class Skill : MonoBehaviour
         Shadow
     }
 
-    public Element SkillElement; 
+    public Element skillElement; 
 
     //constants
     const int MAX_ELEMENTS = 5;
@@ -53,13 +53,13 @@ public class Skill : MonoBehaviour
     {
         bool skillAvailable = false;
 
-        if (Time.time > CurrentTime + Cooldown)
+        if (Time.time > currentTime + cooldown)
         {
             int matchCount = 0;
             //check if player has required mana
             for (int i = 0; i < MAX_ELEMENTS; i++)
             {
-                if (player.ManaPoints[i] >= ManaCost[i])
+                if (player.manaPoints[i] >= manaCost[i])
                     matchCount++;
             }
 
@@ -75,18 +75,18 @@ public class Skill : MonoBehaviour
     public virtual void UseSkill(CharacterClass caster, CharacterClass target)
     {
         //get timestamp to start the cooldown
-        CurrentTime = Time.time;
+        currentTime = Time.time;
     }
 
     public virtual void UseSkill(CharacterClass caster)  //used when skill is being used on the caster only
     {
         //get timestamp to start the cooldown
-        CurrentTime = Time.time;
+        currentTime = Time.time;
     }
 
     public virtual void UseSkill(CharacterClass caster, CharacterClass[] target) //used against all targets. Probably not using this one yet.
     {
         //get timestamp to start the cooldown
-        CurrentTime = Time.time;
+        currentTime = Time.time;
     }
 }
