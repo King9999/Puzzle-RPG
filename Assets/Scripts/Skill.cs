@@ -5,7 +5,8 @@ using UnityEngine;
 //base class for all skills in the game
 public class Skill : MonoBehaviour
 {
-    public new string name; 
+    public string skillName;
+    public string description;
     public int[] manaCost  = new int[MAX_ELEMENTS]; //5 different values, one for each colour (element)
     public float cooldown;    //Amount of time in seconds that must pass before player can use skill again
 
@@ -13,7 +14,7 @@ public class Skill : MonoBehaviour
 
     public int hitCount  = 1;       //determines how many times a skill executes
 
-    protected float currentTime;        //gets current time to enable cooldowns
+    protected float currentTime = 0;        //gets current time to enable cooldowns
     public enum SkillType
     {
         Active,     
@@ -75,18 +76,33 @@ public class Skill : MonoBehaviour
     public virtual void UseSkill(CharacterClass caster, CharacterClass target)
     {
         //get timestamp to start the cooldown
-        currentTime = Time.time;
+        //currentTime = Time.time;
     }
 
     public virtual void UseSkill(CharacterClass caster)  //used when skill is being used on the caster only
     {
         //get timestamp to start the cooldown
-        currentTime = Time.time;
+        //currentTime = Time.time;
     }
 
     public virtual void UseSkill(CharacterClass caster, CharacterClass[] target) //used against all targets. Probably not using this one yet.
     {
         //get timestamp to start the cooldown
-        currentTime = Time.time;
+        //currentTime = Time.time;
     }
+
+    public void InitializeCosts(int redMana, int blueMana, int greenMana, int goldMana, int purpleMana)
+    {
+        manaCost[(int)Element.Fire] = redMana;
+        manaCost[(int)Element.Water] = blueMana;
+        manaCost[(int)Element.Earth] = greenMana;
+        manaCost[(int)Element.Light] = goldMana;
+        manaCost[(int)Element.Shadow] = purpleMana;
+    }
+
+    //TODO: can I make a couroutine that works for all skills?
+    /*IEnumerator DealDamage(int hitCount)
+    {
+
+    }*/
 }

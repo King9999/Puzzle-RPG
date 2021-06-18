@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8851372331842538293
+--- !u!1 &1193136824880801064
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8851372331842538299}
-  - component: {fileID: 8851372331842538292}
+  - component: {fileID: 5162794376362737010}
+  - component: {fileID: 6154299374516720972}
   m_Layer: 0
-  m_Name: Angel
+  m_Name: Meteor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8851372331842538299
+--- !u!4 &5162794376362737010
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8851372331842538293}
+  m_GameObject: {fileID: 1193136824880801064}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -31,33 +31,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8851372331842538292
+--- !u!114 &6154299374516720972
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8851372331842538293}
+  m_GameObject: {fileID: 1193136824880801064}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c492d95931131f4db7c5c40827795ee, type: 3}
+  m_Script: {fileID: 11500000, guid: 26a4e4d326412da49bd938d840e482c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level: 1
-  className: Angel
-  description: A divine being with an assortment of light-based magic.
-  healthPoints: 120
-  maxHealthPoints: 120
-  manaPoints: 0000000000000000000000001e00000000000000
-  maxManaPoints: 0000000000000000000000001400000000000000
-  attackPower: 0
-  defensePower: 0
-  elementalPower:
-  - 0
-  - 0
-  - 0
-  - 40
-  - 0
-  ExperiencePoints: 1000
-  skills:
-  - {fileID: 2033077657495569598, guid: b094d3de4e7d39f4aa882a55a71f5916, type: 3}
+  skillName: Meteor Rain
+  description: Summons a hail of fiery meteors.
+  manaCost: 0000000000000000000000000000000000000000
+  cooldown: 0
+  multiplier: 0.12
+  hitCount: 8
+  SkillProperty: 0
+  skillElement: 0

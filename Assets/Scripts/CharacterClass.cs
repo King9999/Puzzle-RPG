@@ -23,6 +23,7 @@ public class CharacterClass : MonoBehaviour
 
     public int level = 1;          //LV for short
     public string className;
+    public string description;
     public int healthPoints;    //HP
     public int maxHealthPoints;
     public int[] manaPoints = new int[MAX_ELEMENTS];     //MP
@@ -34,7 +35,7 @@ public class CharacterClass : MonoBehaviour
 
 
 
-    public List<Skill> Skills = new List<Skill>();     //TODO: should be a collection of Skill objects instead of string
+    public List<Skill> skills = new List<Skill>();     //TODO: should be a collection of Skill objects instead of string
 
     public void InitializeHealth(int maxHealth)
     {

@@ -4,14 +4,11 @@ using UnityEngine;
 
 public class Heal : Skill
 {
-    public Heal()
+    void Start()
     {
-        name = "Heal";
-        manaCost[(int)Element.Fire] = 0;
-        manaCost[(int)Element.Water] = 0;
-        manaCost[(int)Element.Earth] = 0;
-        manaCost[(int)Element.Light] = 20;
-        manaCost[(int)Element.Shadow] = 0;
+        skillName = "Heal";
+        description = "Restores HP to single target.";
+        InitializeCosts(0, 0, 0, 20, 0);
         cooldown = 10;
         multiplier = 2.2f;
         skillElement = Element.Light;

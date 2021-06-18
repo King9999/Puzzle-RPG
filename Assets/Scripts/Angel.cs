@@ -5,18 +5,14 @@ using UnityEngine;
 /* Angels are focused on light-elemental skills. */
 public class Angel : CharacterClass
 {
-    public Angel()
+    void Start()
     {
-        level = 1;
         className = "Angel";
-        maxHealthPoints = 120;
+        description = "A divine being with an assortment of light-based magic.";
         InitializeElementalPower(0, 0, 0, 40, 0);
         InitializeHealth(120);
-        InitializeMana(0, 0, 0, 20, 0);
+        InitializeMana(0, 0, 0, 30, 0);
         manaPoints[(int)Element.Light] = 30;
-
-        //add skills
-        //Skills.Add(new Heal());
     }
 
 }
