@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //base class for all skills in the game
-public class Skill
+public class Skill : MonoBehaviour
 {
-   public string Name { get; set; }
-    public int[] ManaCost { get; set; } = new int[MAX_ELEMENTS]; //5 different values, one for each colour (element)
-   public float Cooldown { get; set; }   //Amount of time in seconds that must pass before player can use skill again
+    public string Name; 
+    public int[] ManaCost  = new int[MAX_ELEMENTS]; //5 different values, one for each colour (element)
+    public float Cooldown;    //Amount of time in seconds that must pass before player can use skill again
 
-    public float Multiplier { get; set; } = 1;   //adjusts the strength of ELP
+    public float Multiplier  = 1;   //adjusts the strength of ELP
 
-    public int HitCount { get; set; } = 1;       //determines how many times a skill executes
+    public int HitCount  = 1;       //determines how many times a skill executes
 
-    protected float CurrentTime { get; set; }       //gets current time to enable cooldowns
+    protected float CurrentTime;        //gets current time to enable cooldowns
     public enum SkillType
     {
         Active,     
         Passive     //passives have no cost and are always on.
     }
 
-    public SkillType SkillProperty { get; set; } = SkillType.Active;
+    public SkillType SkillProperty  = SkillType.Active;
 
     public enum Element
     {
@@ -31,7 +31,7 @@ public class Skill
         Shadow
     }
 
-    public Element SkillElement { get; set; }
+    public Element SkillElement; 
 
     //constants
     const int MAX_ELEMENTS = 5;

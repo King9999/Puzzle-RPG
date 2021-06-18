@@ -13,9 +13,10 @@ public class Angel : CharacterClass
         InitializeElementalPower(0, 0, 0, 40, 0);
         InitializeHealth(120);
         InitializeMana(0, 0, 0, 20, 0);
+        ManaPoints[(int)Element.Light] = 30;
 
         //add skills
-        Skills.Add(new Heal());
+        //Skills.Add(new Heal());
     }
 
 }

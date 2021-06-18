@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    //Skill heal = new Heal();
-    //CharacterClass player;
+    public CharacterClass player;
 
     // Start is called before the first frame update
-    void Start()//
+    void Start()
     {
-        //player = new CharacterClass()
+       // player = new Angel();
     }
 
     // Update is called once per frame
@@ -18,7 +17,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            //heal.U
+            player.Skills[0].UseSkill(player);  //heal skill
         }
     }
 }
