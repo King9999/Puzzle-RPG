@@ -66,6 +66,25 @@ public class Well : MonoBehaviour
         }
     }
 
+    public void CopyBlockList(List<Block> listToCopy, List<Block> newList)
+    {
+        //ensure the new list is empty
+        newList = new List<Block>();
+
+        float offset = 0.5f;
+        float xBounds = GetComponentInChildren<SpriteRenderer>().bounds.min.x + offset;
+        float yBounds = GetComponentInChildren<SpriteRenderer>().bounds.min.y + offset;
+        int x = 0;          //iterator
+        for (int i = 0; i < WELL_ROWS / 4; i++)
+        {
+            for (int j = 0; j < WELL_COLS; j++)
+            {
+                newList.Add(Instantiate(listToCopy[x], new Vector2(xBounds + j, yBounds + i), Quaternion.identity));
+                x++;
+            }
+        }
+    }
+
     public bool BlocksMatching(Block.BlockType blockType)
     {
         bool isMatching = false;

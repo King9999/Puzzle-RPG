@@ -28,20 +28,8 @@ public class GameManager : MonoBehaviour
     {
         //ensure both wells have the same initial blocks. Any blocks generated afterwards can be different.
         playerWells[PLAYER_WELL_1].InitializeBlocks();
-        
-        float offset = 0.5f;
-        float xBounds = playerWells[PLAYER_WELL_2].GetComponentInChildren<SpriteRenderer>().bounds.min.x + offset;
-        float yBounds = playerWells[PLAYER_WELL_2].GetComponentInChildren<SpriteRenderer>().bounds.min.y + offset;
-        int x = 0;          //iterator 
-        for (int i = 0; i < playerWells[PLAYER_WELL_2].WellRows() / 4; i++)
-        {
-            for (int j = 0; j < playerWells[PLAYER_WELL_2].WellCols(); j++)
-            {
-                playerWells[PLAYER_WELL_2].blockList.Add(Instantiate(playerWells[PLAYER_WELL_1].blockList[x], new Vector2(xBounds + j, yBounds + i), Quaternion.identity));
-                x++;
-            }
-        }
-        
+        playerWells[PLAYER_WELL_2].CopyBlockList(playerWells[PLAYER_WELL_1].blockList, playerWells[PLAYER_WELL_2].blockList);
+
     }
 
     // Update is called once per frame
