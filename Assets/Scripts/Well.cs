@@ -25,8 +25,20 @@ public class Well : MonoBehaviour
         blockList = new List<Block>();
         matchCount = 0;
         
+    }
 
-        //fill well with blocks TODO: don't fill all rows completely at the top
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    public int WellRows() { return WELL_ROWS; }
+    public int WellCols() { return WELL_COLS; }
+
+    //used to setup blocks at start of game. Should be called in game manager.
+    public void InitializeBlocks()
+    {
         float offset = 0.5f;
         float xBounds = GetComponentInChildren<SpriteRenderer>().bounds.min.x + offset;
         float yBounds = GetComponentInChildren<SpriteRenderer>().bounds.min.y + offset;
@@ -52,13 +64,6 @@ public class Well : MonoBehaviour
                 blockList.Add(Instantiate(blockPrefab, new Vector2(xBounds + j, yBounds + i), Quaternion.identity));
             }
         }
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public bool BlocksMatching(Block.BlockType blockType)

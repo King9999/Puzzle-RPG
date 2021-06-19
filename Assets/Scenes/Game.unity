@@ -513,7 +513,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 777694269}
   target: {fileID: 1629407620}
-  playerWells: []
+  playerWells:
+  - {fileID: 213895737963719910, guid: 27135fe36ad1028418c60b9a3955c444, type: 3}
 --- !u!4 &1700624023
 Transform:
   m_ObjectHideFlags: 0
