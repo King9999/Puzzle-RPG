@@ -9,15 +9,35 @@ public class Well : MonoBehaviour
     public Block blockGenerator;
     public BlockData[] blocks;
 
-    byte matchCount;    //used to track if there's a match
+    byte matchCount;        //used to track if there's a match
+    Vector2 speedVector;    //used to control how fast blocks rise
+
+    //consts
+    const int WELL_ROWS = 12;     //the total number of blocks that can fill the well before overflow.
+    const int WELL_COLS = 6;        //total number of blocks from side to side
+    const float INIT_BLOCK_SPEED = 0.1f;
 
     // Start is called before the first frame update
     void Start()
     {
+        //Vector3 screenPos = Camera.main.WorldToViewportPoint(GameManager.instance.transform.position);
+        speedVector = new Vector2(0, INIT_BLOCK_SPEED);
         blockList = new List<Block>();
         matchCount = 0;
         blockGenerator.CreateBlock(blocks[(int)Block.BlockType.Red]);
-        blockList.Add(Instantiate(blockGenerator, new Vector3(0,0,-1), Quaternion.identity));
+
+        //fill well with blocks TODO: don't fill all rows completely at the top
+        float offset = 0.5f;
+        float xBounds = GetComponentInChildren<SpriteRenderer>().bounds.min.x + offset;
+        float yBounds = GetComponentInChildren<SpriteRenderer>().bounds.min.y + offset;
+        for (int i = 0; i < WELL_ROWS / 4; i++)
+        {
+            for (int j = 0; j < WELL_COLS; j++)
+            {              
+                blockList.Add(Instantiate(blockGenerator, new Vector2(xBounds + j, yBounds + i), Quaternion.identity));
+            }
+        }
+        
     }
 
     // Update is called once per frame
