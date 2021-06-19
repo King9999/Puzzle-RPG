@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//[System.Serializable]
 public class Block : MonoBehaviour
 {
+    //public BlockData block;
+
     [Header("Blocks")]
-    public Sprite redBlock;
+    public Sprite blockSprite;
+    /*public Sprite redBlock;
     public Sprite blueBlock;
     public Sprite greenBlock;
     public Sprite goldBlock;
@@ -13,8 +17,9 @@ public class Block : MonoBehaviour
     public Sprite attackBlock;
     public Sprite shieldBlock;
     public Sprite multiBlock;
-    public Sprite trashBlock;
+    public Sprite trashBlock;*/
 
+    //[System.Serializable]
     public enum BlockType
     {
         Red,        //fire
@@ -28,15 +33,12 @@ public class Block : MonoBehaviour
         Trash       //cannot be moved
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    BlockType blockType;
 
-    // Update is called once per frame
-    void Update()
+   public void CreateBlock(BlockData block)
     {
-        
+        blockSprite = block.blockSprite;
+        blockType = block.blockType;
+        GetComponent<SpriteRenderer>().sprite = blockSprite;
     }
 }

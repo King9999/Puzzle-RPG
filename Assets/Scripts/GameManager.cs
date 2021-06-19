@@ -6,17 +6,18 @@ public class GameManager : MonoBehaviour
 {
     public CharacterClass player;
     public CharacterClass target;
+    public Well[] playerWells;
+
+    List<Block> blockList;             
+
+    //constants
+    const int MAX_BLOCKTYPES = 9;
 
     // Start is called before the first frame update
     void Start()
     {
-        // player = new Angel();
-        Debug.Log("Player HP " + player.healthPoints);
-        Debug.Log("Target HP " + target.healthPoints);
 
-        Debug.Log("Player skills:");
-        for (int i = 0; i < player.skills.Count; i++)
-            Debug.Log(player.skills[i].skillName);
+        
     }
 
     // Update is called once per frame
@@ -24,6 +25,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            //TODO: Can I use delegates to select multiple skills with different overloaded methods?
             player.skills[0].UseSkill(player, target);  //heal skill
            // target.skills[0].UseSkill(target);
         }
