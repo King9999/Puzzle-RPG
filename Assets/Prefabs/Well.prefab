@@ -45,9 +45,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockList: []
-  blockGenerator: {fileID: 1366793985981863011, guid: 616d26f86a2e4484db3ac4806babc728, type: 3}
+  blockPrefab: {fileID: 1366793985981863011, guid: 616d26f86a2e4484db3ac4806babc728, type: 3}
   blocks:
   - {fileID: 11400000, guid: f4f4e37358cb6384f8574c9291eeecf8, type: 2}
+  - {fileID: 11400000, guid: c7f93b98491151b4e91062bf8eb7f9a6, type: 2}
+  - {fileID: 11400000, guid: 44e31680d2740d146a8dde4a1a4cd22e, type: 2}
+  - {fileID: 11400000, guid: 32b7642980327854aad70e01f89466d8, type: 2}
+  - {fileID: 11400000, guid: 7336bab040edee64d8c6b46d70468d69, type: 2}
 --- !u!1 &3407520409931479777
 GameObject:
   m_ObjectHideFlags: 0

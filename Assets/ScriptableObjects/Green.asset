@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46700ee8f6e53544a84b4777ffc7594c, type: 3}
   m_Name: Green
   m_EditorClassIdentifier: 
-  blockSprite: {fileID: 0}
+  blockSprite: {fileID: 21300000, guid: abe4c4ab0bceaaf4696437000c289c5d, type: 3}
   blockType: 2

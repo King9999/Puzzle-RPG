@@ -6,7 +6,7 @@ using UnityEngine;
 public class Well : MonoBehaviour
 {
     public List<Block> blockList;        //holds all blocks in player well
-    public Block blockGenerator;
+    public Block blockPrefab;
     public BlockData[] blocks;
 
     byte matchCount;        //used to track if there's a match
@@ -24,17 +24,32 @@ public class Well : MonoBehaviour
         speedVector = new Vector2(0, INIT_BLOCK_SPEED);
         blockList = new List<Block>();
         matchCount = 0;
-        blockGenerator.CreateBlock(blocks[(int)Block.BlockType.Red]);
+        
 
         //fill well with blocks TODO: don't fill all rows completely at the top
         float offset = 0.5f;
         float xBounds = GetComponentInChildren<SpriteRenderer>().bounds.min.x + offset;
         float yBounds = GetComponentInChildren<SpriteRenderer>().bounds.min.y + offset;
+        int blockType = 0;          //used for random block generation
+        int previousBlockType = -1;  //used to prevent the same colour being used twice in a row
         for (int i = 0; i < WELL_ROWS / 4; i++)
         {
             for (int j = 0; j < WELL_COLS; j++)
-            {              
-                blockList.Add(Instantiate(blockGenerator, new Vector2(xBounds + j, yBounds + i), Quaternion.identity));
+            {
+                //randomize block
+                blockType = Random.Range((int)Block.BlockType.Red, (int)Block.BlockType.Purple + 1);
+
+                //check if either the previous colour or the block 6 blocks ahead are the same colour.
+                while (previousBlockType == blockType)
+                {
+                    //ensure no two blocks are the same colour
+                    blockType = Random.Range((int)Block.BlockType.Red, (int)Block.BlockType.Purple + 1);
+                }
+
+                previousBlockType = blockType;
+
+                blockPrefab.CreateBlock(blocks[blockType]);
+                blockList.Add(Instantiate(blockPrefab, new Vector2(xBounds + j, yBounds + i), Quaternion.identity));
             }
         }
         
