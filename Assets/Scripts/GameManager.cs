@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public CharacterClass target;
     public Well[] playerWells;
 
-    List<Block> blockList;             
+    public float riseRate;              //controls block speed            
 
     //constants
     const int MAX_BLOCKTYPES = 9;
@@ -28,13 +28,17 @@ public class GameManager : MonoBehaviour
     {
         //ensure both wells have the same initial blocks. Any blocks generated afterwards can be different.
         playerWells[PLAYER_WELL_1].InitializeBlocks();
-        playerWells[PLAYER_WELL_2].CopyBlockList(playerWells[PLAYER_WELL_1].blockList, playerWells[PLAYER_WELL_2].blockList);
+        playerWells[PLAYER_WELL_2].blockList = playerWells[PLAYER_WELL_2].CopyBlockList(playerWells[PLAYER_WELL_1].blockList);
 
     }
 
     // Update is called once per frame
     void Update()
     {
+        foreach (Well well in playerWells)
+            well.RaiseBlocks(riseRate);
+
+        //playerWells[PLAYER_WELL_2].RaiseBlocks(riseRate);
         /*if (Input.GetMouseButtonDown(0))
         {
             //TODO: Can I use delegates to select multiple skills with different overloaded methods?

@@ -10,7 +10,7 @@ public class Well : MonoBehaviour
     public BlockData[] blocks;
 
     byte matchCount;        //used to track if there's a match
-    Vector2 speedVector;    //used to control how fast blocks rise
+    public float riseRate;        //used to control how fast blocks rise
 
     //consts
     const int WELL_ROWS = 12;     //the total number of blocks that can fill the well before overflow.
@@ -21,7 +21,7 @@ public class Well : MonoBehaviour
     void Start()
     {
         //Vector3 screenPos = Camera.main.WorldToViewportPoint(GameManager.instance.transform.position);
-        speedVector = new Vector2(0, INIT_BLOCK_SPEED);
+        riseRate = INIT_BLOCK_SPEED;
         blockList = new List<Block>();
         matchCount = 0;
         
@@ -30,9 +30,16 @@ public class Well : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //blocks rise at a regular rate. New blocks are genereated one line at a time.
     }
 
+    public void RaiseBlocks(float riseRate)
+    {
+        for (int i = 0; i < blockList.Count; i++)
+        {
+            blockList[i].transform.position = new Vector2(blockList[i].transform.position.x, blockList[i].transform.position.y + (riseRate * Time.deltaTime));
+        }
+    }
     public int WellRows() { return WELL_ROWS; }
     public int WellCols() { return WELL_COLS; }
 
@@ -66,10 +73,10 @@ public class Well : MonoBehaviour
         }
     }
 
-    public void CopyBlockList(List<Block> listToCopy, List<Block> newList)
+    public List<Block> CopyBlockList(List<Block> listToCopy)
     {
         //ensure the new list is empty
-        newList = new List<Block>();
+        List<Block> newList = new List<Block>();
 
         float offset = 0.5f;
         float xBounds = GetComponentInChildren<SpriteRenderer>().bounds.min.x + offset;
@@ -83,6 +90,8 @@ public class Well : MonoBehaviour
                 x++;
             }
         }
+
+        return newList;
     }
 
     public bool BlocksMatching(Block.BlockType blockType)
