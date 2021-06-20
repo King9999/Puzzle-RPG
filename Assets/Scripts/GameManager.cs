@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     const int MAX_BLOCKTYPES = 9;
     const int PLAYER_WELL_1 = 0;
     const int PLAYER_WELL_2 = 1;
+    const float INIT_BLOCK_SPEED = 0.1f;
 
     public static GameManager instance;
 
@@ -26,9 +27,14 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        riseRate = INIT_BLOCK_SPEED;
         //ensure both wells have the same initial blocks. Any blocks generated afterwards can be different.
-        playerWells[PLAYER_WELL_1].InitializeBlocks();
-        playerWells[PLAYER_WELL_2].blockList = playerWells[PLAYER_WELL_2].CopyBlockList(playerWells[PLAYER_WELL_1].blockList);
+        //playerWells[PLAYER_WELL_1].InitializeBlocks();
+        playerWells[PLAYER_WELL_1].GenerateBlocks(3);
+        playerWells[PLAYER_WELL_2].blockList = playerWells[PLAYER_WELL_2].CopyBlockList(playerWells[PLAYER_WELL_1].blockList, 3);
+
+        foreach (Well well in playerWells)
+            well.RiseRate = riseRate;
 
     }
 
@@ -36,7 +42,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         foreach (Well well in playerWells)
-            well.RaiseBlocks(riseRate);
+            well.RaiseBlocks(well.RiseRate);
 
         //playerWells[PLAYER_WELL_2].RaiseBlocks(riseRate);
         /*if (Input.GetMouseButtonDown(0))
