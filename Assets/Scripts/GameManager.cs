@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
     public CharacterClass player;
     public CharacterClass target;
     public Well[] playerWells;
+    public Cursor[] cursors;
 
     public float riseRate;              //controls block speed            
 
@@ -48,8 +50,17 @@ public class GameManager : MonoBehaviour
         /*if (Input.GetMouseButtonDown(0))
         {
             //TODO: Can I use delegates to select multiple skills with different overloaded methods?
-            player.skills[0].UseSkill(player, target);  //heal skill
-           // target.skills[0].UseSkill(target);
+           // player.skills[0].UseSkill(player, target);  //heal skill
+            //target.skills[0].UseSkill(target);
         }*/
+    }
+
+    //left mouse button action will be context sensitive
+    public void OnLeftMouseButtonPressed(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Performed)
+        {
+            target.skills[0].UseSkill(target);
+        }
     }
 }

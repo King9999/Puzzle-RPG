@@ -8,7 +8,6 @@ public class Well : MonoBehaviour
     public List<Block> blockList;        //holds all blocks in player well
     public Block blockPrefab;
     public BlockData[] blocks;
-    LineRenderer line;                  //used to create new blocks when blocks cross this line
 
     byte matchCount;        //used to track if there's a match
     bool drawReady;         //used to draw new blocks offscreen.
@@ -27,8 +26,6 @@ public class Well : MonoBehaviour
         matchCount = 0;
         drawReady = false;
 
-        //create line
-        line = new LineRenderer();
     }
 
     // Update is called once per frame
@@ -39,7 +36,7 @@ public class Well : MonoBehaviour
 
     public void RaiseBlocks(float riseRate)
     {
-        float yBounds = GetComponentInChildren<SpriteRenderer>().bounds.min.y * 2;  //needed to draw new blocks
+        
 
         for (int i = 0; i < blockList.Count; i++)
         {
@@ -48,15 +45,16 @@ public class Well : MonoBehaviour
             //check if i is within the last 6 blocks in the list, which is the bottom row
             if (i >= blockList.Count - BLOCK_COLS && !drawReady)
             {
+                float yBounds = GetComponentInChildren<SpriteRenderer>().bounds.min.y * 2;
                 if (blockList[i].transform.position.y + blockList[i].GetComponent<SpriteRenderer>().bounds.min.y - 0.5f > yBounds)
                     drawReady = true;
             }
         }
 
-        //when the bottom row of blocks are halfway visible, generate a new row of blocks. Bottom row is always the last 6 blocks in the list.
+        //when the bottom row of blocks are fully visible, generate a new row of blocks offscreen. Bottom row is always the last 6 blocks in the list.
         if (drawReady == true)
         {
-            GenerateBlocks(1, true, -1);
+            GenerateBlocks(1, true);
             drawReady = false;
         }
 
@@ -66,7 +64,7 @@ public class Well : MonoBehaviour
      *      Generate rows of blocks.
      * drawBottomToTop: 
      *      if true, blocks are generated starting with the bottom row. */
-    public void GenerateBlocks(int rowCount, bool drawBottomToTop = false, int offScreenRowValue = 0)   //offScreenRowValue must be -1 to draw blocks offscreen and line up properly.
+    public void GenerateBlocks(int rowCount, bool drawOffScreen = false)   //offScreenRowValue must be -1 to draw blocks offscreen and line up properly.
     {
         float offset = 0.5f;
         float xBounds = GetComponentInChildren<SpriteRenderer>().bounds.min.x + offset;
@@ -74,7 +72,7 @@ public class Well : MonoBehaviour
         int blockType = 0;          //used for random block generation
         int previousBlockType = -1;  //used to prevent the same colour being used twice in a row
 
-        if (drawBottomToTop == false)
+        if (drawOffScreen == false)
         {
             for (int i = rowCount - 1; i >= 0; i--)    //going from top to bottom
             {
@@ -99,12 +97,10 @@ public class Well : MonoBehaviour
                 }
             }
         }
-        else
+        else //if we get here, we're drawing offscreen blocks.
         {
-            if (offScreenRowValue < -1) offScreenRowValue = -1;
-
             //instantiate blocks starting from bottom of well
-            for (int i = 0 + offScreenRowValue; i < rowCount + offScreenRowValue; i++)  
+            for (int i = -1; i < rowCount - 1; i++)  
             {
                 for (int j = 0; j < BLOCK_COLS; j++)
                 {

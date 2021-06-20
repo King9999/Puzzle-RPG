@@ -6,7 +6,7 @@
             "id": "aafb9971-4dff-4981-b0d1-c4686219a706",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "Left Mouse Button",
                     "type": "Button",
                     "id": "1ed6969c-de29-4093-aba6-bbd2628903e4",
                     "expectedControlType": "Button",
@@ -18,11 +18,11 @@
                 {
                     "name": "",
                     "id": "2f4686fa-46dd-4ad3-899c-5b3b2aad0c70",
-                    "path": "",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Left Mouse Button",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

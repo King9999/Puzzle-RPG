@@ -9,27 +9,30 @@ public class Heal : Skill
         skillName = "Heal";
         description = "Restores HP to single target.";
         InitializeCosts(0, 0, 0, 20, 0);
-        cooldown = 10;
+        //cooldown = 10;
         multiplier = 2.2f;
         skillElement = Element.Light;
     }
 
     public override void UseSkill(CharacterClass self)
     {
-        if (!CanUseSkill(self))
+        /*if (!CanUseSkill(self))
         {
-            Debug.Log("Can't use skill");
+            Debug.Log(skillName + " not ready");
             return;
-        }
+        }*/
         
-        int restoreAmount = (int)(self.elementalPower[(int)skillElement] * multiplier + Random.Range(0, self.elementalPower[(int)skillElement] * 0.25f));
+        int restoreAmount = (int)(self.elementalPower[(int)skillElement] * multiplier + Random.Range(0, self.elementalPower[(int)skillElement] * 0.15f));
         self.healthPoints += restoreAmount;
         if (self.healthPoints > self.maxHealthPoints)
             self.healthPoints = self.maxHealthPoints;
 
         //TODO: display the amount of HP restored in game
+        GameUI.instance.skillActivated = true;
+        GameUI.instance.healText.text = restoreAmount.ToString();
+        //GameUI.instance.StartCoroutine(GameUI.instance.DisplayDamageText(GameUI.instance.healText));
 
-        Debug.Log("Restored " + restoreAmount + " HP");
+        //Debug.Log("Restored " + restoreAmount + " HP");
         currentTime = Time.time;
     }
 
