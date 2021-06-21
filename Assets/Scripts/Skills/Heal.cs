@@ -13,15 +13,16 @@ public class Heal : Skill
         multiplier = 2.2f;
         skillElement = Element.Light;
         skillAction = SkillAction.Heal;
+        currentTime = 0;
     }
 
     public override void UseSkill(CharacterClass self)
     {
-        /*if (!CanUseSkill(self))
+        if (!CanUseSkill(self))
         {
             Debug.Log(skillName + " not ready");
             return;
-        }*/
+        }
         
         int restoreAmount = (int)(self.elementalPower[(int)skillElement] * multiplier + Random.Range(0, self.elementalPower[(int)skillElement] * 0.15f));
         self.healthPoints += restoreAmount;

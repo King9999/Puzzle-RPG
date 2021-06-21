@@ -34,7 +34,7 @@ public class GameUI : MonoBehaviour
         originalTextPos = healText.transform.position;
         damageTextList = new List<TextMeshProUGUI>();
         //TextMeshProUGUI text = damageText;
-       //text.transform.parent = transform;
+        //text.transform.parent = transform;
         //damageTextList.Add(Instantiate(damageText, transform));
     }
 
@@ -43,7 +43,7 @@ public class GameUI : MonoBehaviour
     {
         if (skillActivated[Heal])
         {
-            StartCoroutine(DisplayText(healText, originalTextPos, Heal));   
+            StartCoroutine(DisplayText(healText, originalTextPos, Heal));
         }
 
         if (skillActivated[Damage])
@@ -55,59 +55,52 @@ public class GameUI : MonoBehaviour
 
     IEnumerator DisplayText(TextMeshProUGUI textGui, Vector2 originalPos, int skillType)
     {
-       
+
         textGui.enabled = true;
         //Vector2 currentPos = textGui.transform.position;
         //Debug.Log("Current pos: " + currentPos);
-       
-        while (textGui.alpha > 0 && skillActivated[skillType])
+
+        while (skillActivated[skillType] && textGui.alpha > 0)
         {
             textGui.alpha -= 0.2f * Time.deltaTime;
             textGui.transform.position = new Vector2(textGui.transform.position.x, textGui.transform.position.y + 10 * Time.deltaTime);
             yield return new WaitForSeconds(0.1f);
         }
-         
+
         skillActivated[skillType] = false;
         textGui.transform.position = originalPos;
         textGui.alpha = 1;
         textGui.enabled = false;
-        
+
 
     }
 
     IEnumerator DisplayText(List<TextMeshProUGUI> textGui, int skillType)
     {
-        for (int i = 0; i < textGui.Count; i++)
+
+       for (int i = 0; i < textGui.Count; i++)
         {
             textGui[i].enabled = true;
             //Vector2 currentPos = textGui.transform.position;
             //Debug.Log("Current pos: " + currentPos);
 
-            while (textGui[i].alpha > 0.01f)
+            while (skillActivated[skillType] && textGui[i].alpha > 0)
             {
                 textGui[i].alpha -= 0.2f * Time.deltaTime;
                 textGui[i].transform.position = new Vector2(textGui[i].transform.position.x, textGui[i].transform.position.y + 10 * Time.deltaTime);
                 yield return new WaitForSeconds(0.1f);
             }
-            //Destroy(textGui[i]);
-            //textGui.RemoveAt(i);
-            //i--;
+
         }
-        skillActivated[skillType] = false;
+
         //clear list
         for (int i = 0; i < textGui.Count; i++)
         {
-            Destroy(textGui[i]);
-            //textGui.RemoveAt(i);
-            //i--;
+            Destroy(textGui[i].gameObject); //needed to add ".gameObject" to remove the transform that gets left behind
         }
         textGui.Clear();
         textGui.Capacity = 0;
-
-        //textGui.transform.position = originalPos;
-        //textGui.alpha = 1;
-        //textGui.enabled = false;
-
+        skillActivated[skillType] = false;
 
     }
 }
