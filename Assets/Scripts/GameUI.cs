@@ -10,6 +10,9 @@ public class GameUI : MonoBehaviour
     public TextMeshProUGUI damageText;
     public List<TextMeshProUGUI> damageTextList;                    //need a list because a skill can hit multiple times
 
+    [Header("Player Data")]
+    public TextMeshProUGUI[] playerNameText;
+    public TextMeshProUGUI[] healthPointText;
     public static GameUI instance;
     Vector2 originalTextPos;
 
@@ -17,6 +20,8 @@ public class GameUI : MonoBehaviour
     public int Heal { get; } = 0;
     public int Damage { get; } = 1;
     public int Support { get; } = 2;    //used for buffs and debuffs
+    public int PlayerOne { get; } = 0;
+    public int PlayerTwo { get; } = 1;
 
     private void Awake()
     {

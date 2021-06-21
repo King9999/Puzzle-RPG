@@ -6,8 +6,8 @@ using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
-    public CharacterClass player;
-    public CharacterClass target;
+    public CharacterClass[] player;
+    //public CharacterClass target;
     public Well[] playerWells;
     public Cursor[] cursors;
 
@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
     const int PLAYER_WELL_1 = 0;
     const int PLAYER_WELL_2 = 1;
     const float INIT_BLOCK_SPEED = 0.1f;
+    int PlayerOne { get; } = 0;
+    int PlayerTwo { get; } = 1;
 
     public static GameManager instance;
 
@@ -38,6 +40,11 @@ public class GameManager : MonoBehaviour
         foreach (Well well in playerWells)
             well.RiseRate = riseRate;
 
+        //player set up
+        GameUI.instance.playerNameText[PlayerOne].text = player[PlayerOne].className;
+        GameUI.instance.healthPointText[PlayerOne].text = player[PlayerOne].healthPoints.ToString();
+        GameUI.instance.playerNameText[PlayerTwo].text = player[PlayerTwo].className;
+        GameUI.instance.healthPointText[PlayerTwo].text = player[PlayerTwo].healthPoints.ToString();
     }
 
     // Update is called once per frame
@@ -61,7 +68,7 @@ public class GameManager : MonoBehaviour
         if (context.phase == InputActionPhase.Performed)
         {
             //target.skills[0].UseSkill(target);
-            player.skills[0].UseSkill(player, target);
+            //player.skills[0].UseSkill(player, target);
         }
     }
 }
