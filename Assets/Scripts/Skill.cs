@@ -21,6 +21,7 @@ public class Skill : MonoBehaviour
         Passive     //passives have no cost and are always on.
     }
 
+
     public SkillType SkillProperty  = SkillType.Active;
 
     public enum Element
@@ -32,7 +33,17 @@ public class Skill : MonoBehaviour
         Shadow
     }
 
-    public Element skillElement; 
+    public Element skillElement;
+
+    //SkillAction is used to determine which UseSkill method to use since there's more than one.
+    public enum SkillAction
+    {
+        Attack,
+        Heal,
+        Support         //buffs and debuffs
+    }
+
+    public SkillAction skillAction;
 
     //constants
     const int MAX_ELEMENTS = 5;

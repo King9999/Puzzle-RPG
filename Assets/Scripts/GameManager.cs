@@ -60,7 +60,8 @@ public class GameManager : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Performed)
         {
-            target.skills[0].UseSkill(target);
+            //target.skills[0].UseSkill(target);
+            player.skills[0].UseSkill(player, target);
         }
     }
 }

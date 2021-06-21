@@ -15,6 +15,7 @@ public class Meteor : Skill
         multiplier = 0.12f;
         hitCount = 8;
         skillElement = Element.Fire;
+        skillAction = SkillAction.Attack;
         currentTime = 0;
     }
 
@@ -47,6 +48,7 @@ public class Meteor : Skill
     {
         isCoroutineRunning = true;
         currentTime = Time.time;
+        GameUI.instance.skillActivated[GameUI.instance.Damage] = true;
 
         int i = 0;
         while (i < hitCount)
@@ -58,8 +60,11 @@ public class Meteor : Skill
                 target.healthPoints = 0;
 
             //TODO: display the amount of HP lost in game
+            GameUI.instance.damageTextList.Add(Instantiate(GameUI.instance.damageText, GameUI.instance.transform));
+            GameUI.instance.damageTextList[GameUI.instance.damageTextList.Count - 1].text = damage.ToString();
+            //GameUI.instance.healText.text = damage.ToString();
             i++;
-            Debug.Log(damage + " damage dealt ");
+            //Debug.Log(damage + " damage dealt ");
             yield return new WaitForSeconds(0.2f);
         }
 

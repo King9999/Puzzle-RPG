@@ -12,6 +12,7 @@ public class Heal : Skill
         //cooldown = 10;
         multiplier = 2.2f;
         skillElement = Element.Light;
+        skillAction = SkillAction.Heal;
     }
 
     public override void UseSkill(CharacterClass self)
@@ -28,7 +29,7 @@ public class Heal : Skill
             self.healthPoints = self.maxHealthPoints;
 
         //TODO: display the amount of HP restored in game
-        GameUI.instance.skillActivated = true;
+        GameUI.instance.skillActivated[GameUI.instance.Heal] = true;
         GameUI.instance.healText.text = restoreAmount.ToString();
         //GameUI.instance.StartCoroutine(GameUI.instance.DisplayDamageText(GameUI.instance.healText));
 
