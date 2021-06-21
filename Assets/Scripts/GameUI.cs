@@ -13,6 +13,7 @@ public class GameUI : MonoBehaviour
     [Header("Player Data")]
     public TextMeshProUGUI[] playerNameText;
     public TextMeshProUGUI[] healthPointText;
+    public HealthBar[] healthBars;
     public static GameUI instance;
     Vector2 originalTextPos;
 
@@ -55,8 +56,14 @@ public class GameUI : MonoBehaviour
         {
             StartCoroutine(DisplayText(damageTextList, Damage));
         }
+
     }
 
+    public void UpdateHealthUI(CharacterClass player, int amount)   //amount is HP gained or lost
+    {
+        healthBars[player.playerID].AdjustMeter(amount);
+        healthPointText[player.playerID].text = player.healthPoints.ToString();
+    }
 
     IEnumerator DisplayText(TextMeshProUGUI textGui, Vector2 originalPos, int skillType)
     {

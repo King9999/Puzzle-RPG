@@ -22,6 +22,7 @@ public class CharacterClass : MonoBehaviour
     const float MAX_ELP = 1000;
 
     public int level = 1;          //LV for short
+    public int playerID;            //either player 1 or 2
     public string className;
     public string description;
     public int healthPoints;    //HP

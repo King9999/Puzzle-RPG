@@ -62,7 +62,7 @@ public class Meteor : Skill
             //TODO: display the amount of HP lost in game
             GameUI.instance.damageTextList.Add(Instantiate(GameUI.instance.damageText, GameUI.instance.transform));
             GameUI.instance.damageTextList[GameUI.instance.damageTextList.Count - 1].text = damage.ToString();
-            //GameUI.instance.healText.text = damage.ToString();
+            GameUI.instance.UpdateHealthUI(target, -damage);
             i++;
             //Debug.Log(damage + " damage dealt ");
             yield return new WaitForSeconds(0.2f);

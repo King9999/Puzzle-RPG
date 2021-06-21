@@ -32,7 +32,7 @@ public class Heal : Skill
         //TODO: display the amount of HP restored in game
         GameUI.instance.skillActivated[GameUI.instance.Heal] = true;
         GameUI.instance.healText.text = restoreAmount.ToString();
-        //GameUI.instance.StartCoroutine(GameUI.instance.DisplayDamageText(GameUI.instance.healText));
+        GameUI.instance.UpdateHealthUI(self, restoreAmount);
 
         //Debug.Log("Restored " + restoreAmount + " HP");
         currentTime = Time.time;
