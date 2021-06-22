@@ -11,7 +11,7 @@ public class Well : MonoBehaviour
 
     byte matchCount;        //used to track if there's a match
     bool drawReady;         //used to draw new blocks offscreen.
-    public float RiseRate { get; set; }        //used to control how fast blocks rise
+    public float RiseValue { get; set; }        //used to control how much blocks rise
 
     //consts
     const int BLOCK_ROWS = 12;     //the total number of blocks that can fill the well before overflow.
@@ -34,19 +34,19 @@ public class Well : MonoBehaviour
         //blocks rise at a regular rate. New blocks are genereated one line at a time.
     }
 
-    public void RaiseBlocks(float riseRate)
+    public void RaiseBlocks(float riseValue)
     {
-        
+        float yOffset = 0.5f;
 
         for (int i = 0; i < blockList.Count; i++)
         {
-            blockList[i].transform.position = new Vector2(blockList[i].transform.position.x, blockList[i].transform.position.y + (riseRate * Time.deltaTime));
+            blockList[i].transform.position = new Vector2(blockList[i].transform.position.x, blockList[i].transform.position.y + riseValue);
 
             //check if i is within the last 6 blocks in the list, which is the bottom row
             if (i >= blockList.Count - BLOCK_COLS && !drawReady)
             {
                 float yBounds = GetComponentInChildren<SpriteRenderer>().bounds.min.y * 2;
-                if (blockList[i].transform.position.y + blockList[i].GetComponent<SpriteRenderer>().bounds.min.y - 0.5f > yBounds)
+                if (blockList[i].transform.position.y + blockList[i].GetComponent<SpriteRenderer>().bounds.min.y - yOffset > yBounds)
                     drawReady = true;
             }
         }

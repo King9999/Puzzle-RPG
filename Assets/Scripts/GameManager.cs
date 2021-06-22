@@ -11,13 +11,16 @@ public class GameManager : MonoBehaviour
     public Well[] playerWells;
     public Cursor[] cursors;
 
-    public float riseRate;              //controls block speed            
+    public float riseRate;              //controls the rate at which blocks rise. Rate is in seconds.
+    public float riseValue;             //how much the blocks rise.
+    float currentTime;                  //timestamp
 
     //constants
     const int MAX_BLOCKTYPES = 9;
     const int PLAYER_WELL_1 = 0;
     const int PLAYER_WELL_2 = 1;
-    const float INIT_BLOCK_SPEED = 0.1f;
+    const float INIT_RISE_RATE = 1f;
+    const float INIT_RISE_VALUE = 0.05f;
     int PlayerOne { get; } = 0;
     int PlayerTwo { get; } = 1;
 
@@ -31,14 +34,16 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        riseRate = INIT_BLOCK_SPEED;
+        riseRate = INIT_RISE_RATE;
+        riseValue = INIT_RISE_VALUE;
+        currentTime = 0;
         //ensure both wells have the same initial blocks. Any blocks generated afterwards can be different.
         //playerWells[PLAYER_WELL_1].InitializeBlocks();
         playerWells[PLAYER_WELL_1].GenerateBlocks(3);
         playerWells[PLAYER_WELL_2].blockList = playerWells[PLAYER_WELL_2].CopyBlockList(playerWells[PLAYER_WELL_1].blockList, 3);
 
         foreach (Well well in playerWells)
-            well.RiseRate = riseRate;
+            well.RiseValue = riseValue;
 
         //player set up
         player[PlayerOne].playerID = PlayerOne;
@@ -55,8 +60,16 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach (Well well in playerWells)
-            well.RaiseBlocks(well.RiseRate);
+        if (Time.time > currentTime + riseRate)
+        {
+            for (int i = 0; i < playerWells.Length; i++)
+            {
+                playerWells[i].RaiseBlocks(playerWells[i].RiseValue);
+                cursors[i].transform.position = new Vector3(cursors[i].transform.position.x, cursors[i].transform.position.y + riseValue, cursors[i].Z_Value);
+            }
+
+            currentTime = Time.time;
+        }
 
         //playerWells[PLAYER_WELL_2].RaiseBlocks(riseRate);
         /*if (Input.GetMouseButtonDown(0))
