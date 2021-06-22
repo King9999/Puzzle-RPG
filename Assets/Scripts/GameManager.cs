@@ -43,12 +43,12 @@ public class GameManager : MonoBehaviour
         //player set up
         player[PlayerOne].playerID = PlayerOne;
         GameUI.instance.playerNameText[PlayerOne].text = player[PlayerOne].className;
-        GameUI.instance.healthPointText[PlayerOne].text = player[PlayerOne].healthPoints.ToString();
+        GameUI.instance.healthPointText[PlayerOne].text = player[PlayerOne].healthPoints + "/" + player[PlayerOne].maxHealthPoints;
         GameUI.instance.healthBars[PlayerOne].SetMaxValue(player[PlayerOne].healthPoints);
 
         player[PlayerTwo].playerID = PlayerTwo;
         GameUI.instance.playerNameText[PlayerTwo].text = player[PlayerTwo].className;
-        GameUI.instance.healthPointText[PlayerTwo].text = player[PlayerTwo].healthPoints.ToString();
+        GameUI.instance.healthPointText[PlayerTwo].text = player[PlayerTwo].healthPoints + "/" + player[PlayerTwo].maxHealthPoints;
         GameUI.instance.healthBars[PlayerTwo].SetMaxValue(player[PlayerTwo].healthPoints);
     }
 
@@ -72,8 +72,8 @@ public class GameManager : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Performed)
         {
-            player[PlayerOne].skills[0].UseSkill(player[PlayerOne]);
-            player[PlayerTwo].skills[0].UseSkill(player[PlayerTwo], player[PlayerOne]);
+            //player[PlayerOne].skills[0].UseSkill(player[PlayerOne]);
+            //player[PlayerTwo].skills[0].UseSkill(player[PlayerTwo], player[PlayerOne]);
             
         }
     }

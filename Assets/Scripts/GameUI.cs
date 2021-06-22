@@ -62,8 +62,23 @@ public class GameUI : MonoBehaviour
     public void UpdateHealthUI(CharacterClass player, int amount)   //amount is HP gained or lost
     {
         healthBars[player.playerID].AdjustMeter(amount);
-        healthPointText[player.playerID].text = player.healthPoints.ToString();
+        //StartCoroutine(TickValue(player, player.healthPoints, amount));
+        healthPointText[player.playerID].text = player.healthPoints + "/" + player.maxHealthPoints;
     }
+
+    //This coroutine raises/lowers a given value by 1 point each interval. Just an effect.
+    /*(IEnumerator TickValue(CharacterClass player, int value, int amount)
+    { }
+        int i = 0;
+        int tickRate = (amount < 0) ? -1 : 1;
+        while (i < amount)
+        {
+            value += tickRate;
+            healthPointText[player.playerID].text = value + "/" + player.maxHealthPoints;
+            i++;
+            yield return new WaitForSeconds(0.1f);
+        }
+    }*/
 
     IEnumerator DisplayText(TextMeshProUGUI textGui, Vector2 originalPos, int skillType)
     {
