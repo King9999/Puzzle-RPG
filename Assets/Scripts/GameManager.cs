@@ -71,13 +71,13 @@ public class GameManager : MonoBehaviour
             currentTime = Time.time;
         }
 
-        //playerWells[PLAYER_WELL_2].RaiseBlocks(riseRate);
-        /*if (Input.GetMouseButtonDown(0))
+        //update cursor positions       
+       for (int i = 0; i < cursors.Length; i++)
         {
-            //TODO: Can I use delegates to select multiple skills with different overloaded methods?
-           // player.skills[0].UseSkill(player, target);  //heal skill
-            //target.skills[0].UseSkill(target);
-        }*/
+            int totalCols = playerWells[i].TotalCols;
+            int currentIndex = (totalCols * cursors[i].CurrentRow) + cursors[i].CurrentCol; //converts index of a 2D array or list to an equal index from a linear list/array.
+            cursors[i].transform.position = new Vector3(playerWells[i].blockList[currentIndex].transform.position.x, playerWells[i].blockList[currentIndex].transform.position.y, cursors[i].Z_Value);
+        }
     }
 
     //left mouse button action will be context sensitive

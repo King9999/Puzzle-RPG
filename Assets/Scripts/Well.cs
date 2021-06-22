@@ -12,10 +12,12 @@ public class Well : MonoBehaviour
     byte matchCount;        //used to track if there's a match
     bool drawReady;         //used to draw new blocks offscreen.
     public float RiseValue { get; set; }        //used to control how much blocks rise
+    public int CurrentRow { get; set; }
+    public int CurrentCol { get; set; }          //iterators for the block list.
 
     //consts
-    const int BLOCK_ROWS = 12;     //the total number of blocks that can fill the well before overflow.
-    const int BLOCK_COLS = 6;        //total number of blocks from side to side
+    public int TotalRows { get; } = 12;     //the total number of blocks that can fill the well before overflow.
+    public int TotalCols { get; } = 6;        //total number of blocks from side to side
 
     // Start is called before the first frame update
     void Start()
@@ -28,12 +30,6 @@ public class Well : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //blocks rise at a regular rate. New blocks are genereated one line at a time.
-    }
-
     public void RaiseBlocks(float riseValue)
     {
         float yOffset = 0.5f;
@@ -43,7 +39,7 @@ public class Well : MonoBehaviour
             blockList[i].transform.position = new Vector2(blockList[i].transform.position.x, blockList[i].transform.position.y + riseValue);
 
             //check if i is within the last 6 blocks in the list, which is the bottom row
-            if (i >= blockList.Count - BLOCK_COLS && !drawReady)
+            if (i >= blockList.Count - TotalCols && !drawReady)
             {
                 float yBounds = GetComponentInChildren<SpriteRenderer>().bounds.min.y * 2;
                 if (blockList[i].transform.position.y + blockList[i].GetComponent<SpriteRenderer>().bounds.min.y - yOffset > yBounds)
@@ -76,7 +72,7 @@ public class Well : MonoBehaviour
         {
             for (int i = rowCount - 1; i >= 0; i--)    //going from top to bottom
             {
-                for (int j = 0; j < BLOCK_COLS; j++)
+                for (int j = 0; j < TotalCols; j++)
                 {
                     //randomize block
                     blockType = Random.Range((int)Block.BlockType.Red, (int)Block.BlockType.Purple + 1);
@@ -102,7 +98,7 @@ public class Well : MonoBehaviour
             //instantiate blocks starting from bottom of well
             for (int i = -1; i < rowCount - 1; i++)  
             {
-                for (int j = 0; j < BLOCK_COLS; j++)
+                for (int j = 0; j < TotalCols; j++)
                 {
                     //randomize block
                     blockType = Random.Range((int)Block.BlockType.Red, (int)Block.BlockType.Purple + 1);
@@ -124,8 +120,8 @@ public class Well : MonoBehaviour
             }
         }
     }
-    public int WellRows() { return BLOCK_ROWS; }
-    public int WellCols() { return BLOCK_COLS; }
+    public int WellRows() { return TotalRows; }
+    public int WellCols() { return TotalCols; }
    
 
     public List<Block> CopyBlockList(List<Block> listToCopy, int rowCount)
@@ -139,7 +135,7 @@ public class Well : MonoBehaviour
         int x = 0;          //iterator
         for (int i = rowCount - 1; i >= 0; i--)
         {
-            for (int j = 0; j < BLOCK_COLS; j++)
+            for (int j = 0; j < TotalCols; j++)
             {
                 Block b = Instantiate(listToCopy[x], new Vector2(xBounds + j, yBounds + i), Quaternion.identity);
                 b.transform.parent = transform;
