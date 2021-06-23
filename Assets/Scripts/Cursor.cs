@@ -10,7 +10,7 @@ public class Cursor : MonoBehaviour
     public SpriteRenderer[] cursorSprites;
     const int ROW = 12;
     const int COLUMN = 6;
-    const float INPUT_DELAY = 0.16f;        //used to prevent rapid movement of left stick.
+    const float INPUT_DELAY = 0.1f;        //used to prevent rapid movement of left stick.
     public float Z_Value { get; } = -2f;              //ensures that cursors is always displayed over blocks.
     float currentTime = 0;
     public bool isAIControlled = false;            //if true, AI moves the cursor, not the controller.
