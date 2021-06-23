@@ -75,8 +75,9 @@ public class GameManager : MonoBehaviour
         //update cursor positions       
        for (int i = 0; i < cursors.Length; i++)
         {
-            int totalCols = playerWells[i].TotalCols;
-            int currentIndex = (totalCols * cursors[i].CurrentRow) + cursors[i].CurrentCol; //converts index of a 2D array or list to an equal index from a linear list/array.
+            //int totalCols = playerWells[i].TotalCols;
+            int currentIndex = cursors[i].CurrentIndex;
+            //int currentIndex = (totalCols * cursors[i].CurrentRow) + cursors[i].CurrentCol; //converts index of a 2D array or list to an equal index from a linear list/array.
             cursors[i].transform.position = new Vector3(playerWells[i].blockList[currentIndex].transform.position.x, playerWells[i].blockList[currentIndex].transform.position.y, cursors[i].Z_Value);
         }
     }

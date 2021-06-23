@@ -17,10 +17,12 @@ public class Cursor : MonoBehaviour
     float xOffset = 0.1f;
     float yOffset = 0.55f;
 
-    int currentIndex;                           //tracks the current index in the block list.
+    //int CurrentIndex;                           //tracks the current index in the block list.
 
     public int CurrentRow { get; set; }         //used to get a block's position in block list.
     public int CurrentCol { get; set; }
+
+    public int CurrentIndex { get; set; }       //tracks the current index in the block list.
 
     private void Start()
     {
@@ -35,7 +37,10 @@ public class Cursor : MonoBehaviour
     //the cursor rises at the same rate as the blocks.
     private void Update()
     {
-        currentIndex = (COLUMN * CurrentRow) + CurrentCol;
+        CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
+
+        //transform.position = new Vector3(GameManager.instance.playerWells[0].blockList[CurrentIndex].transform.position.x,
+           //GameManager.instance.playerWells[0].blockList[CurrentIndex].transform.position.y, Z_Value);
     }
 
     //Gets the block data that the cursor is currently resting on.
@@ -44,9 +49,9 @@ public class Cursor : MonoBehaviour
         //Get the cursor's current row and column position, and get the block data both cursors are resting on
         //Add the block data from block list.
         Block[,] blockArray = new Block[1, 2];
-        int currentIndex = (COLUMN * CurrentRow) + CurrentCol;
-        blockArray[0, 0] = blocks[currentIndex];
-        blockArray[0, 1] = blocks[currentIndex + 1];
+        CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
+        blockArray[0, 0] = blocks[CurrentIndex];
+        blockArray[0, 1] = blocks[CurrentIndex + 1];
 
 
         return blockArray;
@@ -65,8 +70,8 @@ public class Cursor : MonoBehaviour
             if (CurrentRow - 1 >= 0)
             {
                 CurrentRow--;
-                currentIndex = (COLUMN * CurrentRow) + CurrentCol;
-                Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[currentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[currentIndex + 1].blockType);
+                CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
+                Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
             }
         }
     }
@@ -83,8 +88,8 @@ public class Cursor : MonoBehaviour
             if (CurrentRow + 1 <= ROW - 1)
             {
                 CurrentRow++;
-                currentIndex = (COLUMN * CurrentRow) + CurrentCol;
-                Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[currentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[currentIndex + 1].blockType);
+                CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
+                Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
             }
         }
     }
@@ -101,8 +106,8 @@ public class Cursor : MonoBehaviour
             if (CurrentCol - 1 >= 0)
             {
                 CurrentCol--;
-                currentIndex = (COLUMN * CurrentRow) + CurrentCol;
-                Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[currentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[currentIndex + 1].blockType);
+                CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
+                Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
             }
         }
     }
@@ -118,8 +123,8 @@ public class Cursor : MonoBehaviour
             if (CurrentCol + 1 <= COLUMN - 2)   //subtract 2 so that I can capture the block to the right of the cursor without worrying about capturing a space outside of the well.
             {
                 CurrentCol++;
-                currentIndex = (COLUMN * CurrentRow) + CurrentCol;
-                Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[currentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[currentIndex + 1].blockType);
+                CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
+                Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
             }
         }
     }
@@ -131,24 +136,24 @@ public class Cursor : MonoBehaviour
 
         if (context.phase == InputActionPhase.Performed)
         {
-            //int currentIndex = (COLUMN * CurrentRow) + CurrentCol;
+            //int CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
             //swap the two blocks that the cursors are resting on.
             //Block[,] tempBlocks = new Block[1, 2];
             //tempBlocks = GetBlocks(GameManager.instance.playerWells[0].blockList);
             //Sprite blockSprite = GetComponent<SpriteRenderer>().sprite;
 
-            Debug.Log("Original Blocks: " + GameManager.instance.playerWells[0].blockList[currentIndex].blockType + " & " + GameManager.instance.playerWells[0].blockList[currentIndex + 1].blockType);
+            Debug.Log("Original Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + " & " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
 
-            Block temp = GameManager.instance.playerWells[0].blockList[currentIndex];
-            //GameManager.instance.playerWells[0].blockList[currentIndex].transform.position = GameManager.instance.playerWells[0].blockList[currentIndex + 1].transform.position;
-            GameManager.instance.playerWells[0].blockList[currentIndex] = GameManager.instance.playerWells[0].blockList[currentIndex + 1];
-            GameManager.instance.playerWells[0].blockList[currentIndex + 1] = temp;
+           
+            Block temp = GameManager.instance.playerWells[0].blockList[CurrentIndex];       
+            Vector2 tempPos = new Vector2(temp.transform.position.x, temp.transform.position.y);    //need a separate copy of temp position so we don't refer directly to the temp object's position
+            GameManager.instance.playerWells[0].blockList[CurrentIndex].transform.position = GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].transform.position;
+            GameManager.instance.playerWells[0].blockList[CurrentIndex] = GameManager.instance.playerWells[0].blockList[CurrentIndex + 1];
 
-            //change cursor position back to its original position because it's pointing to newly positioned block
-            transform.position = new Vector3(transform.position.x - 1, transform.position.y, Z_Value);
+            GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].transform.position = tempPos;
+            GameManager.instance.playerWells[0].blockList[CurrentIndex + 1] = temp;
 
-
-            Debug.Log("New Blocks: " + GameManager.instance.playerWells[0].blockList[currentIndex].blockType + " & " + GameManager.instance.playerWells[0].blockList[currentIndex + 1].blockType);
+            Debug.Log("New Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + " & " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
         }
     }
 
