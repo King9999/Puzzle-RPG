@@ -87,7 +87,14 @@ public class GameManager : MonoBehaviour
         {
             //player[PlayerOne].skills[0].UseSkill(player[PlayerOne]);
             //player[PlayerTwo].skills[0].UseSkill(player[PlayerTwo], player[PlayerOne]);
-            
+            //int totalCols = playerWells[PlayerOne].TotalCols;
+            //int currentIndex = (totalCols * cursors[PlayerOne].CurrentRow) + cursors[PlayerOne].CurrentCol;
+            Block.BlockType[,] b = cursors[PlayerOne].GetBlocks(playerWells[PlayerOne].blockList);
+
+            for (int i = 0; i < b.GetLength(0); i++)
+                for (int j = 0; j < b.GetLength(1); j++)
+                    Debug.Log(b[i,j]);
+
         }
     }
 }

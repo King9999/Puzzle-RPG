@@ -33,7 +33,7 @@ public class Block : MonoBehaviour
         Trash       //cannot be moved
     }
 
-    BlockType blockType;
+    public BlockType blockType;
 
    public void CreateBlock(BlockData block)
     {

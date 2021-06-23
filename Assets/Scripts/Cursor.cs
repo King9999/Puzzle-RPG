@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-//[CreateAssetMenu(fileName = "New Cursor", menuName = "Scriptable Objects/Cursor")]
+//The cursor consists of two cursors, each of which will capture the block it's resting on. To make this work,
+//I use a 2D array
 public class Cursor : MonoBehaviour
 {
+    public SpriteRenderer[] cursorSprites;
     const int ROW = 12;
     const int COLUMN = 6;
     const float INPUT_DELAY = 0.16f;        //used to prevent rapid movement of left stick.
@@ -24,12 +26,29 @@ public class Cursor : MonoBehaviour
         //transform.position = new Vector3(transform.position.x - xOffset, transform.position.y + yOffset, Z_Value);
         CurrentRow = 0;
         CurrentCol = 0;
+
+        //position the second sprite so that it's to the right of the main cursor.
+        cursorSprites[1].transform.position = new Vector2(cursorSprites[1].transform.position.x + 1, cursorSprites[1].transform.position.y);
     }
     //the cursor rises at the same rate as the blocks.
     /*private void Update()
     {
         transform.position = new Vector3(transform.position.x, transform.position.y + GameManager.instance.riseRate * Time.deltaTime, Z_Value);
     }*/
+
+    //Gets the block data that the cursor is currently resting on.
+    public Block.BlockType[,] GetBlocks(List<Block> blocks)
+    {
+        //Get the cursor's current row and column position, and get the block data both cursors are resting on
+        //Add the block data from block list.
+        Block.BlockType[,] blockArray = new Block.BlockType[1, 2];
+        int currentIndex = (COLUMN * CurrentRow) + CurrentCol;
+        blockArray[0, 0] = blocks[currentIndex].blockType;
+        blockArray[0, 1] = blocks[currentIndex + 1].blockType;
+
+
+        return blockArray;
+    }
     public void MoveUp(InputAction.CallbackContext context)
     {
         if (Time.time > currentTime + INPUT_DELAY && context.phase == InputActionPhase.Performed)
@@ -75,8 +94,7 @@ public class Cursor : MonoBehaviour
         if (Time.time > currentTime + INPUT_DELAY && context.phase == InputActionPhase.Performed)
         {
             currentTime = Time.time;
-            //transform.position = new Vector3(transform.position.x + 1, transform.position.y, Z_Value);
-            if (CurrentCol + 1 <= COLUMN - 1)
+            if (CurrentCol + 1 <= COLUMN - 2)   //subtract 2 so that I can capture the block to the right of the cursor without worrying about capturing a space outside of the well.
             {
                 CurrentCol++;
             }
