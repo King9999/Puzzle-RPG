@@ -55,6 +55,7 @@ public class GameManager : MonoBehaviour
         GameUI.instance.playerNameText[PlayerTwo].text = player[PlayerTwo].className;
         GameUI.instance.healthPointText[PlayerTwo].text = player[PlayerTwo].healthPoints + "/" + player[PlayerTwo].maxHealthPoints;
         GameUI.instance.healthBars[PlayerTwo].SetMaxValue(player[PlayerTwo].healthPoints);
+        cursors[PlayerTwo].isAIControlled = true;
     }
 
     // Update is called once per frame
@@ -89,11 +90,11 @@ public class GameManager : MonoBehaviour
             //player[PlayerTwo].skills[0].UseSkill(player[PlayerTwo], player[PlayerOne]);
             //int totalCols = playerWells[PlayerOne].TotalCols;
             //int currentIndex = (totalCols * cursors[PlayerOne].CurrentRow) + cursors[PlayerOne].CurrentCol;
-            Block.BlockType[,] b = cursors[PlayerOne].GetBlocks(playerWells[PlayerOne].blockList);
+            Block[,] b = cursors[PlayerOne].GetBlocks(playerWells[PlayerOne].blockList);
 
             for (int i = 0; i < b.GetLength(0); i++)
                 for (int j = 0; j < b.GetLength(1); j++)
-                    Debug.Log(b[i,j]);
+                    Debug.Log(b[i,j].blockType + ": " + b[i, j].transform.position);
 
         }
     }

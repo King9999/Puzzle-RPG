@@ -17,6 +17,8 @@ public class Cursor : MonoBehaviour
     float xOffset = 0.1f;
     float yOffset = 0.55f;
 
+    int currentIndex;                           //tracks the current index in the block list.
+
     public int CurrentRow { get; set; }         //used to get a block's position in block list.
     public int CurrentCol { get; set; }
 
@@ -31,26 +33,31 @@ public class Cursor : MonoBehaviour
         cursorSprites[1].transform.position = new Vector2(cursorSprites[1].transform.position.x + 1, cursorSprites[1].transform.position.y);
     }
     //the cursor rises at the same rate as the blocks.
-    /*private void Update()
+    private void Update()
     {
-        transform.position = new Vector3(transform.position.x, transform.position.y + GameManager.instance.riseRate * Time.deltaTime, Z_Value);
-    }*/
+        currentIndex = (COLUMN * CurrentRow) + CurrentCol;
+    }
 
     //Gets the block data that the cursor is currently resting on.
-    public Block.BlockType[,] GetBlocks(List<Block> blocks)
+    public Block[,] GetBlocks(List<Block> blocks)
     {
         //Get the cursor's current row and column position, and get the block data both cursors are resting on
         //Add the block data from block list.
-        Block.BlockType[,] blockArray = new Block.BlockType[1, 2];
+        Block[,] blockArray = new Block[1, 2];
         int currentIndex = (COLUMN * CurrentRow) + CurrentCol;
-        blockArray[0, 0] = blocks[currentIndex].blockType;
-        blockArray[0, 1] = blocks[currentIndex + 1].blockType;
+        blockArray[0, 0] = blocks[currentIndex];
+        blockArray[0, 1] = blocks[currentIndex + 1];
 
 
         return blockArray;
     }
+
+    #region Controls
     public void MoveUp(InputAction.CallbackContext context)
     {
+        if (isAIControlled)
+            return;
+
         if (Time.time > currentTime + INPUT_DELAY && context.phase == InputActionPhase.Performed)
         {
             currentTime = Time.time;
@@ -58,13 +65,17 @@ public class Cursor : MonoBehaviour
             if (CurrentRow - 1 >= 0)
             {
                 CurrentRow--;
-                //get position of block in list, and take its world position.
+                currentIndex = (COLUMN * CurrentRow) + CurrentCol;
+                Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[currentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[currentIndex + 1].blockType);
             }
         }
     }
 
     public void MoveDown(InputAction.CallbackContext context)
     {
+        if (isAIControlled)
+            return;
+
         if (Time.time > currentTime + INPUT_DELAY && context.phase == InputActionPhase.Performed)
         {
             currentTime = Time.time;
@@ -72,12 +83,17 @@ public class Cursor : MonoBehaviour
             if (CurrentRow + 1 <= ROW - 1)
             {
                 CurrentRow++;
+                currentIndex = (COLUMN * CurrentRow) + CurrentCol;
+                Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[currentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[currentIndex + 1].blockType);
             }
         }
     }
 
     public void MoveLeft(InputAction.CallbackContext context)
     {
+        if (isAIControlled)
+            return;
+
         if (Time.time > currentTime + INPUT_DELAY && context.phase == InputActionPhase.Performed)
         {
             currentTime = Time.time;
@@ -85,19 +101,56 @@ public class Cursor : MonoBehaviour
             if (CurrentCol - 1 >= 0)
             {
                 CurrentCol--;
+                currentIndex = (COLUMN * CurrentRow) + CurrentCol;
+                Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[currentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[currentIndex + 1].blockType);
             }
         }
     }
 
     public void MoveRight(InputAction.CallbackContext context)
     {
+        if (isAIControlled)
+            return;
+
         if (Time.time > currentTime + INPUT_DELAY && context.phase == InputActionPhase.Performed)
         {
             currentTime = Time.time;
             if (CurrentCol + 1 <= COLUMN - 2)   //subtract 2 so that I can capture the block to the right of the cursor without worrying about capturing a space outside of the well.
             {
                 CurrentCol++;
+                currentIndex = (COLUMN * CurrentRow) + CurrentCol;
+                Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[currentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[currentIndex + 1].blockType);
             }
         }
     }
+
+    public void MoveBlocks(InputAction.CallbackContext context)
+    {
+        if (isAIControlled)
+            return;
+
+        if (context.phase == InputActionPhase.Performed)
+        {
+            //int currentIndex = (COLUMN * CurrentRow) + CurrentCol;
+            //swap the two blocks that the cursors are resting on.
+            //Block[,] tempBlocks = new Block[1, 2];
+            //tempBlocks = GetBlocks(GameManager.instance.playerWells[0].blockList);
+            //Sprite blockSprite = GetComponent<SpriteRenderer>().sprite;
+
+            Debug.Log("Original Blocks: " + GameManager.instance.playerWells[0].blockList[currentIndex].blockType + " & " + GameManager.instance.playerWells[0].blockList[currentIndex + 1].blockType);
+
+            Block temp = GameManager.instance.playerWells[0].blockList[currentIndex];
+            //GameManager.instance.playerWells[0].blockList[currentIndex].transform.position = GameManager.instance.playerWells[0].blockList[currentIndex + 1].transform.position;
+            GameManager.instance.playerWells[0].blockList[currentIndex] = GameManager.instance.playerWells[0].blockList[currentIndex + 1];
+            GameManager.instance.playerWells[0].blockList[currentIndex + 1] = temp;
+
+            //change cursor position back to its original position because it's pointing to newly positioned block
+            transform.position = new Vector3(transform.position.x - 1, transform.position.y, Z_Value);
+
+
+            Debug.Log("New Blocks: " + GameManager.instance.playerWells[0].blockList[currentIndex].blockType + " & " + GameManager.instance.playerWells[0].blockList[currentIndex + 1].blockType);
+        }
+    }
+
+    #endregion
 }
