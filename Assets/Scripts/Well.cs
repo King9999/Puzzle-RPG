@@ -9,7 +9,6 @@ public class Well : MonoBehaviour
     public Block blockPrefab;
     public BlockData[] blocks;
 
-    byte matchCount;        //used to track if there's a match
     bool drawReady;         //used to draw new blocks offscreen.
     public float RiseValue { get; set; }        //used to control how much blocks rise
     public int CurrentRow { get; set; }
@@ -25,7 +24,6 @@ public class Well : MonoBehaviour
         //Vector3 screenPos = Camera.main.WorldToViewportPoint(GameManager.instance.transform.position);
         //RiseRate = INIT_BLOCK_SPEED;
         blockList = new List<Block>();
-        matchCount = 0;
         drawReady = false;
 
     }

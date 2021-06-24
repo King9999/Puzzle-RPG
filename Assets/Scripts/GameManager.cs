@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     const int PLAYER_WELL_2 = 1;
     const float INIT_RISE_RATE = 1f;
     const float INIT_RISE_VALUE = 0.05f;
+    
     public int PlayerOne { get; } = 0;
     public int PlayerTwo { get; } = 1;
 
@@ -88,70 +89,137 @@ public class GameManager : MonoBehaviour
 
     public void CheckForMatches(Well playerWell)
     {
-        
+        //cannot proceed with this method in certain conditions
+        if (playerWell.blockList.Count < 3)
+            return;
+
         /*****horizontal check*****/       
         int matchCount = 0;                 //tracks how many matches were made between different block types
-        bool matchFound = false;
-        List<Block> matchList = new List<Block>();
+        bool hMatchFound = false;
+        bool vMatchFound = false;
+        bool currentBlockHMatching = false; //used for when the current block breaks an existing match combo.
+        bool currentBlockVMatching = false;
+        const int COLS = 6;                 //used for vertical matching
+        List<Block> hMatchList = new List<Block>();
+        List<Block> vMatchList = new List<Block>();
 
         //add the first two blocks to match list, we'll need them for comparison later.
-        matchList.Add(playerWell.blockList[0]);
-        matchList.Add(playerWell.blockList[1]);
-        int x = matchList.Count - 1;                              //iterator for matchList
+        hMatchList.Add(playerWell.blockList[0]);
+        hMatchList.Add(playerWell.blockList[1]);
+        int x = hMatchList.Count - 1;                              //iterator for hMatchList
 
-        for (int i = matchList.Count; i < playerWell.blockList.Count; i++)
+        //add first block, then add the block 6 blocks ahead of the first. For vertical comparisons we always look
+        //X blocks ahead, where X is the total number of columns. It makes sense when you look at the blocks in game.
+        //Need to check for null reference since we jump ahead a lot.
+        vMatchList.Add(playerWell.blockList[0]);
+        if (playerWell.blockList[COLS] != null) 
+            vMatchList.Add(playerWell.blockList[COLS]);
+        int y = vMatchList.Count - 1;
+
+        for (int i = hMatchList.Count; i < playerWell.blockList.Count; i++)
         {
             //add current block for comparison
-            matchList.Add(playerWell.blockList[i]);
+            hMatchList.Add(playerWell.blockList[i]);
             x++;
-
-            if (matchList[x].blockType == matchList[x - 1].blockType && matchList[x].blockType == matchList[x - 2].blockType)
+            if (i + COLS < playerWell.blockList.Count)
             {
-                //we have a match
-                if (!matchFound)
+                vMatchList.Add(playerWell.blockList[i + COLS]);
+                y++;
+            }
+
+            //horizontal check
+            if (hMatchList[x].blockType == hMatchList[x - 1].blockType && hMatchList[x].blockType == hMatchList[x - 2].blockType)
+            {
+                currentBlockHMatching = true;
+                //we have a horizontal match
+                if (!hMatchFound)
                 {
                     matchCount++;
-                    matchFound = true;              
+                    hMatchFound = true;
                 }
-                continue;   //we're done here, move to next iteration
-            }
-
-            if (!matchFound)
-            {
-                //remove the leftmost block as we no longer need it.
-                //matchList[x - 2] = null;
-                matchList.RemoveAt(x - 2);
-                x--;
+                //continue;   //we're done here, move to next iteration
             }
             else
+            {
+                currentBlockHMatching = false;
+            }
+
+            if (!hMatchFound)
+            {
+                //remove the leftmost block as we no longer need it.
+                //hMatchList[x - 2] = null;
+                hMatchList.RemoveAt(x - 2);
+                x--;
+            }
+            else if (hMatchFound && !currentBlockHMatching)
             {
                 //we found a previous match but the current block doesn't match, so we start a new comparison by adding the next two blocks to
                 //the match list. The second block should get added on the next iteration.
                 if (i + 2 < playerWell.blockList.Count)
                 {
-                    matchList.Add(playerWell.blockList[i + 1]);
-                    //matchList.Add(playerWell.blockList[i + 2]);
+                    hMatchList.Add(playerWell.blockList[i + 1]);
+                    //hMatchList.Add(playerWell.blockList[i + 2]);
                     i++;
                     x++;
                 }
-                matchFound = false;
+                hMatchFound = false;
             }
-                
+
+            //vertical check
+            if (vMatchList[y].blockType == vMatchList[y - 1].blockType && vMatchList[y].blockType == vMatchList[y - 2].blockType)
+            {
+                currentBlockHMatching = true;
+                //we have a horizontal match
+                if (!hMatchFound)
+                {
+                    matchCount++;
+                    hMatchFound = true;
+                }
+                //continue;   //we're done here, move to next iteration
+            }
+            else
+            {
+                currentBlockHMatching = false;
+            }
+
+            if (!hMatchFound)
+            {
+                //remove the leftmost block as we no longer need it.
+                //hMatchList[x - 2] = null;
+                hMatchList.RemoveAt(x - 2);
+                x--;
+            }
+            else if (hMatchFound && !currentBlockHMatching)
+            {
+                //we found a previous match but the current block doesn't match, so we start a new comparison by adding the next two blocks to
+                //the match list. The second block should get added on the next iteration.
+                if (i + 2 < playerWell.blockList.Count)
+                {
+                    hMatchList.Add(playerWell.blockList[i + 1]);
+                    //hMatchList.Add(playerWell.blockList[i + 2]);
+                    i++;
+                    x++;
+                }
+                hMatchFound = false;
+            }
+
         }
 
-        matchList.TrimExcess();     //why doesn't this work?
-       
-        if (matchCount > 0)
+        //once we get here, clear all horizontal matches
+        hMatchList.TrimExcess();     //why doesn't this work?
+
+        /*if (matchCount > 0)
         {
             Debug.Log("Total matches: " + matchCount);
-            foreach (Block b in matchList)
+            foreach (Block b in hMatchList)
             {
                 if (b == null)
                     continue;
 
                 Debug.Log(b.blockType);
             }
-        }
+        }*/
+
     }
 
     //left mouse button action will be context sensitive
