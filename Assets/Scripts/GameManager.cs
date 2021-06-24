@@ -89,7 +89,6 @@ public class GameManager : MonoBehaviour
 
     public void CheckForMatches(Well playerWell)
     {
-        //Debug.Log("Row Depth: " + playerWell.RowDepth);
         //cannot proceed with this method in certain conditions
         if (playerWell.blockList.Count < 3 && playerWell.RowDepth < 3)
             return;
@@ -140,7 +139,14 @@ public class GameManager : MonoBehaviour
                     matchCount++;
                     hMatchFound = true;
                 }
-                //continue;   //we're done here, move to next iteration
+                string list = "Horizontal matches: ";
+                foreach (Block b in hMatchList)
+                {
+                    if (b == null)
+                        continue;
+                    list += b.blockType + ", ";
+                }
+                Debug.Log(list);
             }
             else
             {
@@ -150,7 +156,6 @@ public class GameManager : MonoBehaviour
             if (!hMatchFound)
             {
                 //remove the leftmost block as we no longer need it.
-                //hMatchList[x - 2] = null;
                 hMatchList.RemoveAt(x - 2);
                 x--;
             }
@@ -161,7 +166,6 @@ public class GameManager : MonoBehaviour
                 if (i + 2 < playerWell.blockList.Count)
                 {
                     hMatchList.Add(playerWell.blockList[i + 1]);
-                    //hMatchList.Add(playerWell.blockList[i + 2]);
                     i++;
                     x++;
                 }
@@ -169,61 +173,77 @@ public class GameManager : MonoBehaviour
             }
 
             //vertical check
+            Debug.Log("Row Depth: " + playerWell.RowDepth);
             if (vMatchList.Count < 3) 
                 continue;   //vertical match is impossible
 
             if (vMatchList[y].blockType == vMatchList[y - 1].blockType && vMatchList[y].blockType == vMatchList[y - 2].blockType)
             {
-                currentBlockHMatching = true;
-                //we have a horizontal match
-                if (!hMatchFound)
+                currentBlockVMatching = true;
+                //we have a vertical match
+                if (!vMatchFound)
                 {
                     matchCount++;
-                    hMatchFound = true;
+                    vMatchFound = true;
                 }
-                //continue;   //we're done here, move to next iteration
+                string list = "Vertical matches: ";
+                foreach (Block b in vMatchList)
+                {
+                    if (b == null)
+                        continue;
+                    list += b.blockType + ", ";
+                }
+                Debug.Log(list);
             }
             else
             {
-                currentBlockHMatching = false;
+                currentBlockVMatching = false;
             }
 
-            if (!hMatchFound)
+            if (!vMatchFound)
             {
                 //remove the leftmost block as we no longer need it.
-                //hMatchList[x - 2] = null;
-                hMatchList.RemoveAt(x - 2);
-                x--;
+                vMatchList.RemoveAt(y - 2);
+                y--;
             }
-            else if (hMatchFound && !currentBlockHMatching)
+            else if (vMatchFound && !currentBlockVMatching)
             {
                 //we found a previous match but the current block doesn't match, so we start a new comparison by adding the next two blocks to
                 //the match list. The second block should get added on the next iteration.
-                if (i + 2 < playerWell.blockList.Count)
+                if (i + (COLS * 2) < playerWell.blockList.Count)
                 {
-                    hMatchList.Add(playerWell.blockList[i + 1]);
-                    //hMatchList.Add(playerWell.blockList[i + 2]);
+                    vMatchList.Add(playerWell.blockList[i + COLS]);
                     i++;
-                    x++;
+                    y++;
                 }
-                hMatchFound = false;
+                vMatchFound = false;
             }
 
         }
 
         //once we get here, clear all horizontal matches
-        hMatchList.TrimExcess();     //why doesn't this work?
+        hMatchList.TrimExcess();
 
         /*if (matchCount > 0)
         {
+            string list = "Horizontal matches: ";
             Debug.Log("Total matches: " + matchCount);
             foreach (Block b in hMatchList)
             {
                 if (b == null)
                     continue;
-
-                Debug.Log(b.blockType);
+                list += b.blockType + ", ";
             }
+            Debug.Log(list);
+
+            list = "Vertical matches: ";
+            foreach (Block b in vMatchList)
+            {
+                if (b == null)
+                    continue;
+                list += b.blockType + ", ";
+            }
+            Debug.Log(list);
         }*/
 
     }
