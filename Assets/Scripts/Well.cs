@@ -11,8 +11,8 @@ public class Well : MonoBehaviour
 
     bool drawReady;         //used to draw new blocks offscreen.
     public float RiseValue { get; set; }        //used to control how much blocks rise
-    public int CurrentRow { get; set; }
-    public int CurrentCol { get; set; }          //iterators for the block list.
+    public int RowDepth { get; set; }           //tracks how many rows are in the well.
+    //public int CurrentCol { get; set; }          //iterators for the block list.
 
     //consts
     public int TotalRows { get; } = 12;     //the total number of blocks that can fill the well before overflow.
@@ -25,6 +25,7 @@ public class Well : MonoBehaviour
         //RiseRate = INIT_BLOCK_SPEED;
         blockList = new List<Block>();
         drawReady = false;
+        RowDepth = 0;
 
     }
 
@@ -89,6 +90,7 @@ public class Well : MonoBehaviour
                     block.transform.parent = transform;     //creates the object as a child of the well object in hierarchy
                     blockList.Add(block);
                 }
+                RowDepth++;
             }
         }
         else //if we get here, we're drawing offscreen blocks.
@@ -115,12 +117,11 @@ public class Well : MonoBehaviour
                     block.transform.parent = transform;     //creates the object as a child of the well object in hierarchy
                     blockList.Add(block);
                 }
+                RowDepth++;
             }
         }
     }
-    public int WellRows() { return TotalRows; }
-    public int WellCols() { return TotalCols; }
-   
+  
 
     public List<Block> CopyBlockList(List<Block> listToCopy, int rowCount)
     {

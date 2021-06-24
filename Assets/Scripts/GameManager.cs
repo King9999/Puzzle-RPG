@@ -89,8 +89,9 @@ public class GameManager : MonoBehaviour
 
     public void CheckForMatches(Well playerWell)
     {
+        //Debug.Log("Row Depth: " + playerWell.RowDepth);
         //cannot proceed with this method in certain conditions
-        if (playerWell.blockList.Count < 3)
+        if (playerWell.blockList.Count < 3 && playerWell.RowDepth < 3)
             return;
 
         /*****horizontal check*****/       
@@ -128,6 +129,8 @@ public class GameManager : MonoBehaviour
             }
 
             //horizontal check
+            if (hMatchList.Count < 3)
+                continue;   //not enough blocks
             if (hMatchList[x].blockType == hMatchList[x - 1].blockType && hMatchList[x].blockType == hMatchList[x - 2].blockType)
             {
                 currentBlockHMatching = true;
@@ -166,6 +169,9 @@ public class GameManager : MonoBehaviour
             }
 
             //vertical check
+            if (vMatchList.Count < 3) 
+                continue;   //vertical match is impossible
+
             if (vMatchList[y].blockType == vMatchList[y - 1].blockType && vMatchList[y].blockType == vMatchList[y - 2].blockType)
             {
                 currentBlockHMatching = true;
