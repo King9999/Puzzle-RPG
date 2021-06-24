@@ -83,10 +83,10 @@ public class GameManager : MonoBehaviour
         }
 
         //check for block matches, both vertical and horizontal
-        CheckForMatches(playerWells[PlayerOne]);
+        //CheckForMatches(playerWells[PlayerOne]);
     }
 
-    void CheckForMatches(Well playerWell)
+    public void CheckForMatches(Well playerWell)
     {
         
         /*****horizontal check*****/       
@@ -97,37 +97,61 @@ public class GameManager : MonoBehaviour
         //add the first two blocks to match list, we'll need them for comparison later.
         matchList.Add(playerWell.blockList[0]);
         matchList.Add(playerWell.blockList[1]);
+        int x = matchList.Count - 1;                              //iterator for matchList
 
         for (int i = matchList.Count; i < playerWell.blockList.Count; i++)
         {
             //add current block for comparison
             matchList.Add(playerWell.blockList[i]);
+            x++;
 
-            if (playerWell.blockList[i].blockType == playerWell.blockList[i - 1].blockType && playerWell.blockList[i].blockType == playerWell.blockList[i - 2].blockType)
+            if (matchList[x].blockType == matchList[x - 1].blockType && matchList[x].blockType == matchList[x - 2].blockType)
             {
                 //we have a match
                 if (!matchFound)
                 {
                     matchCount++;
-                    matchFound = true; 
+                    matchFound = true;              
                 }
+                continue;   //we're done here, move to next iteration
             }
 
             if (!matchFound)
             {
                 //remove the leftmost block as we no longer need it.
-                matchList[i - 2] = null;
-
+                //matchList[x - 2] = null;
+                matchList.RemoveAt(x - 2);
+                x--;
             }
             else
             {
                 //we found a previous match but the current block doesn't match, so we start a new comparison by adding the next two blocks to
-                //the match list.
-                matchList[matchList.Count - 1] = null;
+                //the match list. The second block should get added on the next iteration.
+                if (i + 2 < playerWell.blockList.Count)
+                {
+                    matchList.Add(playerWell.blockList[i + 1]);
+                    //matchList.Add(playerWell.blockList[i + 2]);
+                    i++;
+                    x++;
+                }
+                matchFound = false;
             }
                 
         }
-        
+
+        matchList.TrimExcess();     //why doesn't this work?
+       
+        if (matchCount > 0)
+        {
+            Debug.Log("Total matches: " + matchCount);
+            foreach (Block b in matchList)
+            {
+                if (b == null)
+                    continue;
+
+                Debug.Log(b.blockType);
+            }
+        }
     }
 
     //left mouse button action will be context sensitive
