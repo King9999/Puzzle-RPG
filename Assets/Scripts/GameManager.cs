@@ -21,8 +21,8 @@ public class GameManager : MonoBehaviour
     const int PLAYER_WELL_2 = 1;
     const float INIT_RISE_RATE = 1f;
     const float INIT_RISE_VALUE = 0.05f;
-    int PlayerOne { get; } = 0;
-    int PlayerTwo { get; } = 1;
+    public int PlayerOne { get; } = 0;
+    public int PlayerTwo { get; } = 1;
 
     public static GameManager instance;
 
@@ -61,6 +61,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //raise blocks
         if (Time.time > currentTime + riseRate)
         {
             for (int i = 0; i < playerWells.Length; i++)
@@ -80,6 +81,53 @@ public class GameManager : MonoBehaviour
             //int currentIndex = (totalCols * cursors[i].CurrentRow) + cursors[i].CurrentCol; //converts index of a 2D array or list to an equal index from a linear list/array.
             cursors[i].transform.position = new Vector3(playerWells[i].blockList[currentIndex].transform.position.x, playerWells[i].blockList[currentIndex].transform.position.y, cursors[i].Z_Value);
         }
+
+        //check for block matches, both vertical and horizontal
+        CheckForMatches(playerWells[PlayerOne]);
+    }
+
+    void CheckForMatches(Well playerWell)
+    {
+        
+        /*****horizontal check*****/       
+        int matchCount = 0;                 //tracks how many matches were made between different block types
+        bool matchFound = false;
+        List<Block> matchList = new List<Block>();
+
+        //add the first two blocks to match list, we'll need them for comparison later.
+        matchList.Add(playerWell.blockList[0]);
+        matchList.Add(playerWell.blockList[1]);
+
+        for (int i = matchList.Count; i < playerWell.blockList.Count; i++)
+        {
+            //add current block for comparison
+            matchList.Add(playerWell.blockList[i]);
+
+            if (playerWell.blockList[i].blockType == playerWell.blockList[i - 1].blockType && playerWell.blockList[i].blockType == playerWell.blockList[i - 2].blockType)
+            {
+                //we have a match
+                if (!matchFound)
+                {
+                    matchCount++;
+                    matchFound = true; 
+                }
+            }
+
+            if (!matchFound)
+            {
+                //remove the leftmost block as we no longer need it.
+                matchList[i - 2] = null;
+
+            }
+            else
+            {
+                //we found a previous match but the current block doesn't match, so we start a new comparison by adding the next two blocks to
+                //the match list.
+                matchList[matchList.Count - 1] = null;
+            }
+                
+        }
+        
     }
 
     //left mouse button action will be context sensitive

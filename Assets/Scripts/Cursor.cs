@@ -136,24 +136,19 @@ public class Cursor : MonoBehaviour
 
         if (context.phase == InputActionPhase.Performed)
         {
-            //int CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
-            //swap the two blocks that the cursors are resting on.
-            //Block[,] tempBlocks = new Block[1, 2];
-            //tempBlocks = GetBlocks(GameManager.instance.playerWells[0].blockList);
-            //Sprite blockSprite = GetComponent<SpriteRenderer>().sprite;
-
-            Debug.Log("Original Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + " & " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
+            int playerOne = GameManager.instance.PlayerOne;
+            //Debug.Log("Original Blocks: " + GameManager.instance.playerWells[playerOne].blockList[CurrentIndex].blockType + " & " + GameManager.instance.playerWells[playerOne].blockList[CurrentIndex + 1].blockType);
 
            
-            Block temp = GameManager.instance.playerWells[0].blockList[CurrentIndex];       
+            Block temp = GameManager.instance.playerWells[playerOne].blockList[CurrentIndex];       
             Vector2 tempPos = new Vector2(temp.transform.position.x, temp.transform.position.y);    //need a separate copy of temp position so we don't refer directly to the temp object's position
-            GameManager.instance.playerWells[0].blockList[CurrentIndex].transform.position = GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].transform.position;
-            GameManager.instance.playerWells[0].blockList[CurrentIndex] = GameManager.instance.playerWells[0].blockList[CurrentIndex + 1];
+            GameManager.instance.playerWells[playerOne].blockList[CurrentIndex].transform.position = GameManager.instance.playerWells[playerOne].blockList[CurrentIndex + 1].transform.position;
+            GameManager.instance.playerWells[playerOne].blockList[CurrentIndex] = GameManager.instance.playerWells[playerOne].blockList[CurrentIndex + 1];
 
-            GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].transform.position = tempPos;
-            GameManager.instance.playerWells[0].blockList[CurrentIndex + 1] = temp;
+            GameManager.instance.playerWells[playerOne].blockList[CurrentIndex + 1].transform.position = tempPos;
+            GameManager.instance.playerWells[playerOne].blockList[CurrentIndex + 1] = temp;
 
-            Debug.Log("New Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + " & " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
+           //Debug.Log("New Blocks: " + GameManager.instance.playerWells[playerOne].blockList[CurrentIndex].blockType + " & " + GameManager.instance.playerWells[playerOne].blockList[CurrentIndex + 1].blockType);
         }
     }
 
