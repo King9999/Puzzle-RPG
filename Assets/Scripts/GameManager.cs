@@ -92,8 +92,7 @@ public class GameManager : MonoBehaviour
         //cannot proceed with this method in certain conditions
         if (playerWell.blockList.Count < 3 && playerWell.RowDepth < 3)
             return;
-
-        /*****horizontal check*****/       
+  
         int matchCount = 0;                 //tracks how many matches were made between different block types
         bool hMatchFound = false;
         bool vMatchFound = false;
@@ -108,24 +107,14 @@ public class GameManager : MonoBehaviour
         hMatchList.Add(playerWell.blockList[1]);
         int x = hMatchList.Count - 1;                              //iterator for hMatchList
 
-        //add first block, then add the block 6 blocks ahead of the first. For vertical comparisons we always look
-        //X blocks ahead, where X is the total number of columns. It makes sense when you look at the blocks in game.
-        //Need to check for null reference since we jump ahead a lot.
-        vMatchList.Add(playerWell.blockList[0]);
-        if (playerWell.blockList[COLS] != null) 
-            vMatchList.Add(playerWell.blockList[COLS]);
-        int y = vMatchList.Count - 1;
+       
 
         for (int i = hMatchList.Count; i < playerWell.blockList.Count; i++)
         {
             //add current block for comparison
             hMatchList.Add(playerWell.blockList[i]);
             x++;
-            if (i + COLS < playerWell.blockList.Count)
-            {
-                vMatchList.Add(playerWell.blockList[i + COLS]);
-                y++;
-            }
+           
 
             //horizontal check
             if (hMatchList.Count < 3)
@@ -171,13 +160,37 @@ public class GameManager : MonoBehaviour
                 }
                 hMatchFound = false;
             }
+        }
 
-            //vertical check
-            Debug.Log("Row Depth: " + playerWell.RowDepth);
+        /******VERTICAL MATCH CHECK**********/
+        //add the block 6 blocks ahead from the first, then add the block 12 blocks ahead of the first. For vertical comparisons we always look
+        //X blocks ahead, where X is the total number of columns. It makes sense when you look at the blocks in game. We iterate from the first block and continue until we reach
+        //the end of the column. Need to check for null reference since we jump ahead a lot.
+        int colIterator = 0;
+        vMatchList.Add(playerWell.blockList[colIterator]);
+        colIterator += COLS;
+        if (playerWell.blockList[COLS] != null)
+        {
+            vMatchList.Add(playerWell.blockList[colIterator]);
+            colIterator += COLS;
+        }
+        int y = vMatchList.Count - 1;
+
+        //run through block list again to do vertical check. Unlike horizontal search, we only need to check every 
+        //6 blocks ahead, and we only need to iterate through each column
+        for (int i = 0; i < COLS; i++)
+        {
+            if (colIterator + COLS < playerWell.blockList.Count)
+            {
+                vMatchList.Add(playerWell.blockList[colIterator]);
+                colIterator += COLS;
+                y++;
+            }
+            //Debug.Log("Row Depth: " + playerWell.RowDepth);
             if (vMatchList.Count < 3) 
                 continue;   //vertical match is impossible
 
-            if (vMatchList[y].blockType == vMatchList[y - 1].blockType && vMatchList[y].blockType == vMatchList[y - 2].blockType)
+            if (vMatchList[y].blockType == vMatchList[y].blockType && playerWell.blockList[i].blockType == vMatchList[y + 1].blockType)
             {
                 currentBlockVMatching = true;
                 //we have a vertical match
@@ -213,7 +226,7 @@ public class GameManager : MonoBehaviour
                 if (i + (COLS * 2) < playerWell.blockList.Count)
                 {
                     vMatchList.Add(playerWell.blockList[i + COLS]);
-                    i++;
+                    i += COLS;
                     y++;
                 }
                 vMatchFound = false;
