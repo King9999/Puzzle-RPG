@@ -163,34 +163,58 @@ public class GameManager : MonoBehaviour
         }
 
         /******VERTICAL MATCH CHECK**********/
-        //add the block 6 blocks ahead from the first, then add the block 12 blocks ahead of the first. For vertical comparisons we always look
-        //X blocks ahead, where X is the total number of columns. It makes sense when you look at the blocks in game. We iterate from the first block and continue until we reach
-        //the end of the column. Need to check for null reference since we jump ahead a lot.
+        //add the current block to match list, then the block 6 blocks ahead from the current. Repeat until we reach end of block list.
+        //It makes sense when you look at the blocks in game and see what it takes to check for vertical matches.
         int colIterator = 0;
-        vMatchList.Add(playerWell.blockList[colIterator]);
+        /*vMatchList.Add(playerWell.blockList[colIterator]);
         colIterator += COLS;
         if (playerWell.blockList[COLS] != null)
         {
             vMatchList.Add(playerWell.blockList[colIterator]);
             colIterator += COLS;
-        }
-        int y = vMatchList.Count - 1;
-
+        }*/
+        int y = 0;
+        int currentColBlockCount; //tracks number of blocks in a column. Must not be less than 3.
         //run through block list again to do vertical check. Unlike horizontal search, we only need to check every 
         //6 blocks ahead, and we only need to iterate through each column
         for (int i = 0; i < COLS; i++)
         {
-            if (colIterator + COLS < playerWell.blockList.Count)
+            colIterator = i;
+            currentColBlockCount = 0;
+            //add the current block to match list, and all other blocks in the current column
+            //vMatchList.Add(playerWell.blockList[i]);
+            //currentColBlockCount = 1;
+            int yCounter = 0;   //controls how many times y is incremented. Cannot exceed 2.
+            while (colIterator < playerWell.blockList.Count)
             {
                 vMatchList.Add(playerWell.blockList[colIterator]);
                 colIterator += COLS;
-                y++;
+                currentColBlockCount++;
+                if (yCounter < 2)
+                {
+                    y++;
+                    yCounter++;
+                }
+                
             }
-            //Debug.Log("Row Depth: " + playerWell.RowDepth);
-            if (vMatchList.Count < 3) 
-                continue;   //vertical match is impossible
 
-            if (vMatchList[y].blockType == vMatchList[y].blockType && playerWell.blockList[i].blockType == vMatchList[y + 1].blockType)
+            if (currentColBlockCount < 3)
+            {
+                //delete the blocks that were added as vertical match is impossible in current column
+                int j = 0;
+                while (j < currentColBlockCount)
+                {
+                    vMatchList.RemoveAt(vMatchList.Count - 1);
+                    j++;
+                    y--;
+                }
+                continue;
+            }
+            //advance y iterator 2 blocks so the next block is compared against previous 2 blocks
+            //y += 2;
+
+            //compare block that y points to against the previous two blocks
+            if (vMatchList[y].blockType == vMatchList[y - 1].blockType && vMatchList[y].blockType == vMatchList[y - 2].blockType)
             {
                 currentBlockVMatching = true;
                 //we have a vertical match
@@ -213,29 +237,92 @@ public class GameManager : MonoBehaviour
                 currentBlockVMatching = false;
             }
 
+            //if there's no match, delete the block at beginning of list and advance y by 1
             if (!vMatchFound)
             {
                 //remove the leftmost block as we no longer need it.
                 vMatchList.RemoveAt(y - 2);
-                y--;
+                y++;
             }
             else if (vMatchFound && !currentBlockVMatching)
             {
-                //we found a previous match but the current block doesn't match, so we start a new comparison by adding the next two blocks to
-                //the match list. The second block should get added on the next iteration.
-                if (i + (COLS * 2) < playerWell.blockList.Count)
+                //we found a previous match but the current block doesn't match, so we remove the current block. Y remains where it is.
+                /*if (i + (COLS * 2) < playerWell.blockList.Count)
                 {
                     vMatchList.Add(playerWell.blockList[i + COLS]);
                     i += COLS;
                     y++;
-                }
+                }*/
+                vMatchList.RemoveAt(y); //y does not move
                 vMatchFound = false;
             }
-
+            
         }
 
-        //once we get here, clear all horizontal matches
+        //if there's a match, do not remove anymore blocks and keep adding blocks until the match stops or there are no more blocks to add.
+
+        //if match ends, add the next block (if applicable) and advance y by 1.
+
+        //if there's no block to add, move on to next iteration in for loop
+
+        /*if (colIterator + COLS < playerWell.blockList.Count)
+        {
+            vMatchList.Add(playerWell.blockList[colIterator]);
+            colIterator += COLS;
+            y++;
+        }*/
+        //Debug.Log("Row Depth: " + playerWell.RowDepth);
+        //if (vMatchList.Count < 3) 
+        //continue;   //vertical match is impossible
+
+        /*if (vMatchList[y].blockType == vMatchList[y - 1].blockType && vMatchList[y].blockType == vMatchList[y - 2].blockType)
+        {
+            currentBlockVMatching = true;
+            //we have a vertical match
+            if (!vMatchFound)
+            {
+                matchCount++;
+                vMatchFound = true;
+            }
+            string list = "Vertical matches: ";
+            foreach (Block b in vMatchList)
+            {
+                if (b == null)
+                    continue;
+                list += b.blockType + ", ";
+            }
+            Debug.Log(list);
+        }
+        else
+        {
+            currentBlockVMatching = false;
+        }*/
+
+        /*if (!vMatchFound)
+        {
+            //remove the leftmost block as we no longer need it.
+            vMatchList.RemoveAt(y - 2);
+            y--;
+        }*/
+        /*else if (vMatchFound && !currentBlockVMatching)
+        {
+            //we found a previous match but the current block doesn't match, so we start a new comparison by adding the next two blocks to
+            //the match list. The second block should get added on the next iteration.
+            if (i + (COLS * 2) < playerWell.blockList.Count)
+            {
+                vMatchList.Add(playerWell.blockList[i + COLS]);
+                i += COLS;
+                y++;
+            }
+            vMatchFound = false;
+        }*/
+
+        //once we get here, clear all horizontal and vertical matches
         hMatchList.TrimExcess();
+        vMatchList.TrimExcess();
+    }
+
+        
 
         /*if (matchCount > 0)
         {
@@ -259,7 +346,7 @@ public class GameManager : MonoBehaviour
             Debug.Log(list);
         }*/
 
-    }
+    
 
     //left mouse button action will be context sensitive
     public void OnLeftMouseButtonPressed(InputAction.CallbackContext context)
