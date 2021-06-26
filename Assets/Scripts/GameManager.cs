@@ -176,6 +176,7 @@ public class GameManager : MonoBehaviour
         bool vMatchFound = false;
         const int COLS = 6;                 //used for vertical matching
         List<Block> vMatchList = new List<Block>();
+        List<int> idList = new List<int>();         //keeps record of blocks IDs that match.
 
         const int INIT_INDEX = 2;
         int y = INIT_INDEX;              //y always begins at 2 because we always compare a block against the previous two blocks in match list.
@@ -227,10 +228,14 @@ public class GameManager : MonoBehaviour
                     {
                         matchCount++;
                         matchingBlockCount += 3;    //at least 3 blocks must match.
+                        //track the IDs of the blocks that match
+                        for (int k = 0; k < 3; k++)
+                            idList.Add(vMatchList[y - k].blockID);
                         vMatchFound = true;
                     }
                     else
                     {
+                        idList.Add(vMatchList[y].blockID);
                         matchingBlockCount++;   //we matched previously, so we just add 1 more block that matched.
                     }
                 }
@@ -264,9 +269,31 @@ public class GameManager : MonoBehaviour
 
         }
 
-        //if we're on the last block and there's no match, delete the last 2 blocks. These 2 blocks do not
-        //match with anything and can be safely removed.
-        if (y >= vMatchList.Count - 1 && !currentBlockVMatching)
+        //once we get here, remove all blocks whose IDs don't match the blocks that do match.
+        if (idList.Count > 0)
+        {
+            for (int i = 0; i < vMatchList.Count; i++)
+            {
+                bool idFound = false;
+                foreach(int id in idList)
+                {
+                    if (id == vMatchList[i].blockID)
+                    {
+                        //value is in the list
+                        idFound = true;
+                        break;
+                    }
+
+                }
+                //remove ID if it's not in the list.
+                if (!idFound)
+                {
+                    vMatchList.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+        /*if (y >= vMatchList.Count - 1 && !currentBlockVMatching)
         {
             //delete current block.
             vMatchList.RemoveAt(vMatchList.Count - 1);
@@ -275,16 +302,18 @@ public class GameManager : MonoBehaviour
                 //also remove the second last block since we had a match previously and don't want to remove a matching block.
                 vMatchList.RemoveAt(vMatchList.Count - 1);
             }
-        }
+
+
+        }*/
 
         //once we get here, there should only be matching blocks in the lists. Clear all horizontal and vertical matches
         hMatchList.TrimExcess();
         vMatchList.TrimExcess();
 
-        if (matchCount > 0)
-        {
+        //if (matchCount > 0)
+        //{
             string list = "Horizontal matches: ";
-            Debug.Log("Total matches: " + matchCount);
+            //Debug.Log("Total matches: " + matchCount);
             foreach (Block b in hMatchList)
             {
                 if (b == null)
@@ -301,7 +330,7 @@ public class GameManager : MonoBehaviour
                 list += b.blockType + ", ";
             }
             Debug.Log(list);
-        }
+        //}
     }
 
         
