@@ -88,6 +88,9 @@ public class Well : MonoBehaviour
                     blockPrefab.CreateBlock(blocks[blockType]);
                     Block block = Instantiate(blockPrefab, new Vector2(xBounds + j, yBounds + i), Quaternion.identity);
                     block.transform.parent = transform;     //creates the object as a child of the well object in hierarchy
+                    //generate ID
+                    block.blockID = GameManager.instance.blockID;
+                    GameManager.instance.blockID++;
                     blockList.Add(block);
                 }
                 RowDepth++;
@@ -115,6 +118,9 @@ public class Well : MonoBehaviour
                     blockPrefab.CreateBlock(blocks[blockType]);
                     Block block = Instantiate(blockPrefab, new Vector2(xBounds + j, yBounds + i), Quaternion.identity);
                     block.transform.parent = transform;     //creates the object as a child of the well object in hierarchy
+                    //generate ID
+                    block.blockID = GameManager.instance.blockID;
+                    GameManager.instance.blockID++;
                     blockList.Add(block);
                 }
                 RowDepth++;
@@ -138,6 +144,10 @@ public class Well : MonoBehaviour
             {
                 Block b = Instantiate(listToCopy[x], new Vector2(xBounds + j, yBounds + i), Quaternion.identity);
                 b.transform.parent = transform;
+
+                //generate ID
+                b.blockID = GameManager.instance.blockID;
+                GameManager.instance.blockID++;
                 newList.Add(b);
                 x++;
             }

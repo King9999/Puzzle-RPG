@@ -9,16 +9,9 @@ public class Block : MonoBehaviour
 
     [Header("Blocks")]
     public Sprite blockSprite;
-    /*public Sprite redBlock;
-    public Sprite blueBlock;
-    public Sprite greenBlock;
-    public Sprite goldBlock;
-    public Sprite purpleBlock;
-    public Sprite attackBlock;
-    public Sprite shieldBlock;
-    public Sprite multiBlock;
-    public Sprite trashBlock;*/
-
+    public int blockID;         //each block will have a unique number. Makes it easy to locate and destroy it.
+    
+   
     //[System.Serializable]
     public enum BlockType
     {

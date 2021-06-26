@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public float riseRate;              //controls the rate at which blocks rise. Rate is in seconds.
     public float riseValue;             //how much the blocks rise.
     float currentTime;                  //timestamp
+    [HideInInspector] public int blockID;   //assigns unique block IDs when a new block is generated.
 
     //constants
     const int MAX_BLOCKTYPES = 9;
@@ -35,6 +36,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        blockID = 0;
         riseRate = INIT_RISE_RATE;
         riseValue = INIT_RISE_VALUE;
         currentTime = 0;
