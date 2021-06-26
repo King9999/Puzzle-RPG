@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour
   
         int matchCount = 0;                 //tracks how many matches were made between different block types
         bool hMatchFound = false;
-        bool currentBlockHMatching;         //used for when the current block breaks an existing match combo.
+        bool currentBlockHMatching = false;         //used for when the current block breaks an existing match combo.
         List<Block> hMatchList = new List<Block>();
 
         //add the first two blocks to match list, we'll need them for comparison later.
@@ -150,21 +150,21 @@ public class GameManager : MonoBehaviour
                 hMatchFound = false;
             }
 
-            //if we're on the last block and there's no match, delete the last 2 blocks. These 2 blocks do not
-            //match with anything and can be safely removed.
-            if (i == playerWell.blockList.Count - 1 && x >= hMatchList.Count - 1 && !currentBlockHMatching)
-            {
-                //delete current block.
-                hMatchList.RemoveAt(hMatchList.Count - 1);
-                if (!hMatchFound)
-                {
-                    //also remove the second last block since we had a match previously and don't want to remove a matching block.
-                    hMatchList.RemoveAt(hMatchList.Count - 1);
-                }
-            }
         }
 
 
+        //if we're on the last block and there's no match, delete the last 2 blocks. These 2 blocks do not
+        //match with anything and can be safely removed.
+        if (x >= hMatchList.Count - 1 && !currentBlockHMatching)
+        {
+            //delete current block.
+            hMatchList.RemoveAt(hMatchList.Count - 1);
+            if (!hMatchFound)
+            {
+                //also remove the second last block since we had a match previously and don't want to remove a matching block.
+                hMatchList.RemoveAt(hMatchList.Count - 1);
+            }
+        }
 
         /******VERTICAL MATCH CHECK**********/
         //add the current block to match list, then the block 6 blocks ahead from the current. Repeat until we reach end of block list.
@@ -175,23 +175,28 @@ public class GameManager : MonoBehaviour
         const int COLS = 6;                 //used for vertical matching
         List<Block> vMatchList = new List<Block>();
 
-
-        int y = 2;                          //y always begins at 2 because we always compare a block against the previous two blocks in match list.
+        const int INIT_INDEX = 2;
+        int y = INIT_INDEX;              //y always begins at 2 because we always compare a block against the previous two blocks in match list.
         for (int i = 0; i < COLS; i++)
         {
             int colIterator = i;            //iterates through the blocklist to add blocks to match list.
             int currentColBlockCount = 0;   //tracks number of blocks in a column. Must not be less than 3.          
+            int matchingBlockCount = 0;     //counts the number of blocks that match so that y can be re-positioned correctly in the match list.
+
+            //reset y to prevent out of bounds errors.
+            if (y >= vMatchList.Count - 1)
+            {
+                if (matchingBlockCount > 0)
+                    y = matchingBlockCount + 2; //we advance 2 ahead to avoid comparing any matched blocks.
+                else
+                    y = INIT_INDEX;
+            }
 
             while (colIterator < playerWell.blockList.Count)
             {
                 vMatchList.Add(playerWell.blockList[colIterator]);
                 colIterator += COLS;
                 currentColBlockCount++;
-                /*if (yCounter < 2)
-                {
-                    y++;
-                    yCounter++;
-                }*/
                 
             }
 
@@ -209,7 +214,7 @@ public class GameManager : MonoBehaviour
             }
 
             //continue checking the match list until
-            while (y < vMatchList.Count || (y <= playerWell.blockList.Count - 1 && i == COLS - 1)) //TODO: Need a condition here that will let me check all blocks in the match list.
+            while (y < vMatchList.Count && y <= playerWell.blockList.Count - 1) //TODO: Need a condition here that will let me check all blocks in the match list.
             {
                 //compare block that y points to against the previous two blocks
                 if (vMatchList[y].blockType == vMatchList[y - 1].blockType && vMatchList[y].blockType == vMatchList[y - 2].blockType)
@@ -219,7 +224,12 @@ public class GameManager : MonoBehaviour
                     if (!vMatchFound)
                     {
                         matchCount++;
+                        matchingBlockCount += 3;    //at least 3 blocks must match.
                         vMatchFound = true;
+                    }
+                    else
+                    {
+                        matchingBlockCount++;   //we matched previously, so we just add 1 more block that matched.
                     }
                 }
                 else
@@ -238,6 +248,7 @@ public class GameManager : MonoBehaviour
                 {
                     //we found a previous match but the current block doesn't match, so we start a new comparison to avoid the matched blocks. Advance y 2 times.
                     //vMatchList.RemoveAt(y); //y does not move
+                    //y = matchingBlockCount + 3;
                     y += 2;
                     vMatchFound = false;
                 }
@@ -246,21 +257,8 @@ public class GameManager : MonoBehaviour
                     y++; //y is increased so that the matched blocks are not compared against in the future, potentially deleting valid blocks.
                 }
 
-                //if we're on the last block and there's no match, delete the last 2 blocks. These 2 blocks do not
-                //match with anything and can be safely removed.
-                /*if (i == COLS - 1 && y >= vMatchList.Count - 1 && !currentBlockVMatching)
-                {
-                    //delete current block.
-                    vMatchList.RemoveAt(vMatchList.Count - 1);
-                    if (!vMatchFound)
-                    {
-                        //also remove the second last block since we had a match previously and don't want to remove a matching block.
-                        vMatchList.RemoveAt(vMatchList.Count - 1);
-                    }
-                }*/
-            }
-
-           
+              
+            }          
 
         }
 
