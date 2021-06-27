@@ -309,22 +309,47 @@ public class GameManager : MonoBehaviour
 
         if (vMatchCount > 0)
         {
-            //check last 3 blocks. If there's no match, we delete the last 2 blocks.
-            if (vMatchList[vMatchList.Count - 1].blockType == vMatchList[vMatchList.Count - 2].blockType 
-                && vMatchList[vMatchList.Count - 1].blockType == vMatchList[vMatchList.Count - 3].blockType)
-            {
-                return;
-            }
+            //Due to how the vertical match check is performed, we always check if the last 2 blocks are part of
+            //a match. They're removed if their IDs are not in the ID list.
 
-            vMatchList.RemoveAt(vMatchList.Count - 1);
-            vMatchList.RemoveAt(vMatchList.Count - 1);
-            /*if (!vMatchFound)
+            /*for (int i = 0; i < 2; i++)
             {
-                //also remove the second last block since we had a match previously and don't want to remove a matching block.
-                vMatchList.RemoveAt(vMatchList.Count - 1);
+                if (vMatchList[vMatchList.Count - 1].blockType != vMatchList[vMatchList.Count - 2].blockType)
+                    vMatchList.RemoveAt(vMatchList.Count - 1);
+                else
+                    //we have a match, so do nothing else
+                    break;
             }*/
 
-        }
+            for (int i = 0; i < 2; i++)
+            {
+                bool idFound = false;
+                foreach (int id in idList)
+                {
+                    if (id == vMatchList[vMatchList.Count - (i + 1)].blockID)
+                    {
+                        //value is in the list
+                        idFound = true;
+                        break;
+                    }
+
+                }
+                //remove ID if it's not in the list.
+                if (!idFound)
+                {
+                    vMatchList.RemoveAt(vMatchList.Count - (i + 1));
+                    i--;
+                }
+            }
+
+                //vMatchList.RemoveAt(vMatchList.Count - 1);
+                /*if (!vMatchFound)
+                {
+                    //also remove the second last block since we had a match previously and don't want to remove a matching block.
+                    vMatchList.RemoveAt(vMatchList.Count - 1);
+                }*/
+
+            }
         else
         {
             //clear the list, no match found
