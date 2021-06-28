@@ -11,7 +11,7 @@ public class Well : MonoBehaviour
 
     bool drawReady;         //used to draw new blocks offscreen.
     public float RiseValue { get; set; }        //used to control how much blocks rise
-    public int RowDepth { get; set; }           //tracks how many rows are in the well.
+    public int RowDepth { get { return blockList.Count / TotalCols; }  }           //tracks how many rows are in the well.
     //public int CurrentCol { get; set; }          //iterators for the block list.
 
     //consts
@@ -25,7 +25,7 @@ public class Well : MonoBehaviour
         //RiseRate = INIT_BLOCK_SPEED;
         blockList = new List<Block>();
         drawReady = false;
-        RowDepth = 0;
+        //RowDepth = 0;
 
     }
 
@@ -93,7 +93,7 @@ public class Well : MonoBehaviour
                     GameManager.instance.blockID++;
                     blockList.Add(block);
                 }
-                RowDepth++;
+                //RowDepth++;
             }
         }
         else //if we get here, we're drawing offscreen blocks.
@@ -123,7 +123,7 @@ public class Well : MonoBehaviour
                     GameManager.instance.blockID++;
                     blockList.Add(block);
                 }
-                RowDepth++;
+                //RowDepth++;
             }
         }
     }

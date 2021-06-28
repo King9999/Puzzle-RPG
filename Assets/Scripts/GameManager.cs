@@ -10,10 +10,14 @@ public class GameManager : MonoBehaviour
     //public CharacterClass target;
     public Well[] playerWells;
     public Cursor[] cursors;
+    List<int> idList;                   //keeps record of block IDs that match for destruction later.
+    List<int> comboEnderList;           //tracks which blocks end a match combo so the combo counter can be reset.
+    public byte comboCounter;           //counter for matches of 4 or greater
+    public byte chainCounter;           //counter for chains of 2 or greater
 
-    public float riseRate;              //controls the rate at which blocks rise. Rate is in seconds.
-    public float riseValue;             //how much the blocks rise.
-    float currentTime;                  //timestamp
+    public float riseRate;                  //controls the rate at which blocks rise. Rate is in seconds.
+    public float riseValue;                 //how much the blocks rise.
+    float currentTime;                      //timestamp
     [HideInInspector] public int blockID;   //assigns unique block IDs when a new block is generated.
 
     //constants
@@ -43,8 +47,8 @@ public class GameManager : MonoBehaviour
         currentTime = 0;
         //ensure both wells have the same initial blocks. Any blocks generated afterwards can be different.
         //playerWells[PLAYER_WELL_1].InitializeBlocks();
-        playerWells[PLAYER_WELL_1].GenerateBlocks(3);
-        playerWells[PLAYER_WELL_2].blockList = playerWells[PLAYER_WELL_2].CopyBlockList(playerWells[PLAYER_WELL_1].blockList, 3);
+        playerWells[PlayerOne].GenerateBlocks(3);
+        playerWells[PlayerTwo].blockList = playerWells[PlayerTwo].CopyBlockList(playerWells[PlayerOne].blockList, 3);
 
         foreach (Well well in playerWells)
             well.RiseValue = riseValue;
@@ -60,6 +64,10 @@ public class GameManager : MonoBehaviour
         GameUI.instance.healthPointText[PlayerTwo].text = player[PlayerTwo].healthPoints + "/" + player[PlayerTwo].maxHealthPoints;
         GameUI.instance.healthBars[PlayerTwo].SetMaxValue(player[PlayerTwo].healthPoints);
         cursors[PlayerTwo].isAIControlled = true;
+
+        //list set up
+        idList = new List<int>();
+        comboEnderList = new List<int>();
     }
 
     // Update is called once per frame
@@ -80,20 +88,33 @@ public class GameManager : MonoBehaviour
         //update cursor positions       
        for (int i = 0; i < cursors.Length; i++)
         {
-            //int totalCols = playerWells[i].TotalCols;
             int currentIndex = cursors[i].CurrentIndex;
-            //int currentIndex = (totalCols * cursors[i].CurrentRow) + cursors[i].CurrentCol; //converts index of a 2D array or list to an equal index from a linear list/array.
             cursors[i].transform.position = new Vector3(playerWells[i].blockList[currentIndex].transform.position.x, playerWells[i].blockList[currentIndex].transform.position.y, cursors[i].Z_Value);
         }
 
         //check for block matches, both vertical and horizontal
         //CheckForMatches(playerWells[PlayerOne]);
+
+        //remove any matching blocks
+        if (idList.Count > 0)
+            RemoveMatchingBlocks(playerWells[PlayerOne]);
+    }
+
+    private void RemoveMatchingBlocks(Well playerWell)
+    {
+        for (int i = 0; i < idList.Count; i++)
+        {
+
+        }
+        //block removal complete
+        idList.Clear();
+        idList.Capacity = 0;
     }
 
     public void CheckForMatches(Well playerWell)
     {
         //cannot proceed with this method in certain conditions
-        if (playerWell.blockList.Count < 3 && playerWell.RowDepth < 3)
+        if (playerWell.blockList.Count < 3 || playerWell.RowDepth < 3)
             return;
   
         int matchCount = 0;                 //tracks how many matches were made between different block types
@@ -117,7 +138,8 @@ public class GameManager : MonoBehaviour
 
             //horizontal check
             if (hMatchList.Count < 3)
-                continue;   //not enough blocks
+                continue;   //not enough blocks, add next block.
+
             if (hMatchList[x].blockType == hMatchList[x - 1].blockType && hMatchList[x].blockType == hMatchList[x - 2].blockType)
             {
                 currentBlockHMatching = true;
@@ -125,7 +147,14 @@ public class GameManager : MonoBehaviour
                 if (!hMatchFound)
                 {
                     matchCount++;
+                    //track the IDs of the blocks that match
+                    for (int k = 0; k < 3; k++)
+                        idList.Add(hMatchList[x - k].blockID);
                     hMatchFound = true;
+                }
+                else
+                {
+                    idList.Add(hMatchList[x].blockID);  //This block is part of an ongoing match, i.e. a combo
                 }
                
             }
@@ -178,7 +207,7 @@ public class GameManager : MonoBehaviour
         int vMatchCount = 0;                //tracks how many times a vertical match was found. Does not include matches of 4 or more.
         const int COLS = 6;                 //used for vertical matching
         List<Block> vMatchList = new List<Block>();
-        List<int> idList = new List<int>();         //keeps record of blocks IDs that match.
+        //List<int> idList = new List<int>();         //keeps record of blocks IDs that match.
 
         const int INIT_INDEX = 2;
         int y = INIT_INDEX;              //y always begins at 2 because we always compare a block against the previous two blocks in match list.
@@ -222,12 +251,11 @@ public class GameManager : MonoBehaviour
             }
 
             //continue checking the match list until
-            while (y < vMatchList.Count) //TODO: Need a condition here that will let me check all blocks in the match list.
+            while (y < vMatchList.Count) 
             {
                 if (y < INIT_INDEX)  //we're on the first block in list, we must always compare the next three blocks, starting from the 3rd.
                     y = INIT_INDEX;
-                //else
-                   // y++;
+                
                 //compare block that y points to against the previous two blocks
                 if (vMatchList[y].blockType == vMatchList[y - 1].blockType && vMatchList[y].blockType == vMatchList[y - 2].blockType)
                 {
@@ -277,49 +305,11 @@ public class GameManager : MonoBehaviour
 
         }
 
-        //once we get here, remove all blocks whose IDs don't match the blocks that do match.
-       /* if (vMatchCount > 0)
-        {
-            for (int i = 0; i < vMatchList.Count; i++)
-            {
-                bool idFound = false;
-                foreach(int id in idList)
-                {
-                    if (id == vMatchList[i].blockID)
-                    {
-                        //value is in the list
-                        idFound = true;
-                        break;
-                    }
-
-                }
-                //remove ID if it's not in the list.
-                if (!idFound)
-                {
-                    vMatchList.RemoveAt(i);
-                    i--;
-                }
-            }
-        }
-        else
-        {
-            //clear the list, no match found
-            vMatchList.Clear();
-        }*/
 
         if (vMatchCount > 0)
         {
             //Due to how the vertical match check is performed, we always check if the last 2 blocks are part of
             //a match. They're removed if their IDs are not in the ID list.
-
-            /*for (int i = 0; i < 2; i++)
-            {
-                if (vMatchList[vMatchList.Count - 1].blockType != vMatchList[vMatchList.Count - 2].blockType)
-                    vMatchList.RemoveAt(vMatchList.Count - 1);
-                else
-                    //we have a match, so do nothing else
-                    break;
-            }*/
 
             for (int i = 0; i < 2; i++)
             {
@@ -334,7 +324,7 @@ public class GameManager : MonoBehaviour
                     }
 
                 }
-                //remove ID if it's not in the list.
+                //remove block if its ID is not in the ID list.
                 if (!idFound)
                 {
                     vMatchList.RemoveAt(vMatchList.Count - (i + 1));
@@ -342,14 +332,8 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-                //vMatchList.RemoveAt(vMatchList.Count - 1);
-                /*if (!vMatchFound)
-                {
-                    //also remove the second last block since we had a match previously and don't want to remove a matching block.
-                    vMatchList.RemoveAt(vMatchList.Count - 1);
-                }*/
 
-            }
+        }
         else
         {
             //clear the list, no match found
@@ -357,8 +341,8 @@ public class GameManager : MonoBehaviour
         }
 
         //once we get here, there should only be matching blocks in the lists. Clear all horizontal and vertical matches
-        hMatchList.TrimExcess();
-        vMatchList.TrimExcess();
+        //hMatchList.TrimExcess();
+        //vMatchList.TrimExcess();
 
         //if (matchCount > 0)
         //{
