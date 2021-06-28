@@ -102,13 +102,49 @@ public class GameManager : MonoBehaviour
 
     private void RemoveMatchingBlocks(Well playerWell)
     {
+        byte comboCounter = 0;
+        //TODO: Can I use lambda expression to remove all the matching blocks?
         for (int i = 0; i < idList.Count; i++)
         {
+            for (int j = 0; j < playerWell.blockList.Count; j++)
+            {
+                if (playerWell.blockList[j].blockID == idList[i])
+                {
+                    //delete this block from the well
+                    Destroy(playerWell.blockList[j].gameObject);
+                    playerWell.blockList[j] = null;
+                    //playerWell.blockList.RemoveAt(j);
+                   //j--;
+                    comboCounter++;
 
+                    //are we at the end of the combo?
+                    foreach (int endValue in comboEnderList)
+                    {
+                        if (endValue == idList[i])
+                        {
+                            //combo ends here, display combo Counter to screen
+                            Debug.Log("Combo Counter: " + comboCounter);
+                            //reset combo value afterwards
+                            comboCounter = 0;
+                         
+                        }
+                    }
+                    //var value = idList.First(comboEnderList => comboEnderList == idList[i]);
+                    //Debug.Log("Combo Ender ID: " + value);
+                    idList.RemoveAt(i);
+                    i--;
+
+
+                }
+            }
+            //playerWell.blockList.Remove(playerWell.blockList[0]);
+            //playerWell.blockList.Contains(idList[i])
         }
         //block removal complete
         idList.Clear();
+        comboEnderList.Clear();
         idList.Capacity = 0;
+        comboEnderList.Capacity = 0;
     }
 
     public void CheckForMatches(Well playerWell)
@@ -173,6 +209,9 @@ public class GameManager : MonoBehaviour
             {
                 //we found a previous match but the current block doesn't match, so we start a new comparison by adding the next two blocks to
                 //the match list. The second block should get added on the next iteration.
+
+                comboEnderList.Add(hMatchList[x - 1].blockID);  //we get the previously matched block for combo counting later.
+
                 if (i + 2 < playerWell.blockList.Count)
                 {
                     hMatchList.Add(playerWell.blockList[i + 1]);
@@ -292,6 +331,8 @@ public class GameManager : MonoBehaviour
                 else if (vMatchFound && !currentBlockVMatching)
                 {
                     //we found a previous match but the current block doesn't match, so we start a new comparison to avoid the matched blocks. Advance y 2 times.
+
+                    comboEnderList.Add(vMatchList[y - 1].blockID);  //grab the previously matched block's ID for combo counting later.
                     y += 2;
                     vMatchFound = false;
                 }
