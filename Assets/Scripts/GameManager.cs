@@ -108,13 +108,16 @@ public class GameManager : MonoBehaviour
         {
             for (int j = 0; j < playerWell.blockList.Count; j++)
             {
+                if (playerWell.blockList[j] == null)
+                    continue;
+
                 if (playerWell.blockList[j].blockID == idList[i])
                 {
                     //delete this block from the well
-                    Destroy(playerWell.blockList[j].gameObject);
-                    playerWell.blockList[j] = null;
+                    //Destroy(playerWell.blockList[j].gameObject);
+                    playerWell.blockList[j].NullifyBlock(playerWell.blockList[j]);
                     //playerWell.blockList.RemoveAt(j);
-                   //j--;
+                    //j--;
                     comboCounter++;
 
                     //are we at the end of the combo?
@@ -131,8 +134,8 @@ public class GameManager : MonoBehaviour
                     }
                     //var value = idList.First(comboEnderList => comboEnderList == idList[i]);
                     //Debug.Log("Combo Ender ID: " + value);
-                    idList.RemoveAt(i);
-                    i--;
+                    //idList.RemoveAt(i);
+                    //i--;
 
 
                 }
@@ -159,8 +162,10 @@ public class GameManager : MonoBehaviour
         List<Block> hMatchList = new List<Block>();
 
         //add the first two blocks to match list, we'll need them for comparison later.
-        hMatchList.Add(playerWell.blockList[0]);
-        hMatchList.Add(playerWell.blockList[1]);
+        if (playerWell.blockList[0] != null)
+            hMatchList.Add(playerWell.blockList[0]);
+        if (playerWell.blockList[1] != null)
+            hMatchList.Add(playerWell.blockList[1]);
         int x = hMatchList.Count - 1;                              //iterator for hMatchList
 
        
@@ -168,6 +173,9 @@ public class GameManager : MonoBehaviour
         for (int i = hMatchList.Count; i < playerWell.blockList.Count; i++)
         {
             //add current block for comparison
+            if (playerWell.blockList[i] == null)
+                continue;
+
             hMatchList.Add(playerWell.blockList[i]);
             x++;
            
@@ -270,10 +278,13 @@ public class GameManager : MonoBehaviour
 
             while (colIterator < playerWell.blockList.Count)
             {
-                vMatchList.Add(playerWell.blockList[colIterator]);
+                if (playerWell.blockList[colIterator] != null)
+                {
+                    vMatchList.Add(playerWell.blockList[colIterator]);
+                    currentColBlockCount++;
+                }
                 colIterator += COLS;
-                currentColBlockCount++;
-                
+                             
             }
 
             if (currentColBlockCount < 3)
@@ -284,17 +295,16 @@ public class GameManager : MonoBehaviour
                 {
                     vMatchList.RemoveAt(vMatchList.Count - 1);
                     j++;
-                    //y--;
                 }
                 continue;
             }
 
-            //continue checking the match list until
+            //loop through all blocks in column
             while (y < vMatchList.Count) 
             {
-                if (y < INIT_INDEX)  //we're on the first block in list, we must always compare the next three blocks, starting from the 3rd.
-                    y = INIT_INDEX;
-                
+                if (y < INIT_INDEX)  
+                    y = INIT_INDEX; //we must always be comparing three blocks, starting from the 3rd.
+
                 //compare block that y points to against the previous two blocks
                 if (vMatchList[y].blockType == vMatchList[y - 1].blockType && vMatchList[y].blockType == vMatchList[y - 2].blockType)
                 {
@@ -325,13 +335,11 @@ public class GameManager : MonoBehaviour
                 {
                     //remove the leftmost block as we no longer need it.
                     vMatchList.RemoveAt(y - 2);
-                    //y--;
                     y = matchingBlockCount + INIT_INDEX;    //we set y in a way that it avoids any matching blocks in match list.
                 }
                 else if (vMatchFound && !currentBlockVMatching)
                 {
-                    //we found a previous match but the current block doesn't match, so we start a new comparison to avoid the matched blocks. Advance y 2 times.
-
+                    //we found a previous match but the current block doesn't match, so we start a new comparison to avoid the matched blocks by advancing y 2 times.
                     comboEnderList.Add(vMatchList[y - 1].blockID);  //grab the previously matched block's ID for combo counting later.
                     y += 2;
                     vMatchFound = false;

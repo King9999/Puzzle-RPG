@@ -23,7 +23,8 @@ public class Block : MonoBehaviour
         Attack,
         Shield,
         Multi,       //gives player mana of all colours
-        Trash       //cannot be moved
+        Trash,       //cannot be moved
+        Null = -1         //invisible and doesn't interact with other blocks, except to switch places with other blocks.
     }
 
     public BlockType blockType;
@@ -33,5 +34,13 @@ public class Block : MonoBehaviour
         blockSprite = block.blockSprite;
         blockType = block.blockType;
         GetComponent<SpriteRenderer>().sprite = blockSprite;
+    }
+
+    public void NullifyBlock(Block b)
+    {
+        b.blockType = BlockType.Null;
+        b.GetComponent<SpriteRenderer>().enabled = false;
+        b.GetComponent<BoxCollider2D>().enabled = false;
+        b = null;
     }
 }
