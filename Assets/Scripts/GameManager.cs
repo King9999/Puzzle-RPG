@@ -104,26 +104,32 @@ public class GameManager : MonoBehaviour
     {
         byte comboCounter = 0;
         //TODO: Can I use lambda expression to remove all the matching blocks?
-        for (int i = 0; i < idList.Count; i++)
+        for (int i = 0; i < playerWell.blockList.Count; i++)
         {
-            for (int j = 0; j < playerWell.blockList.Count; j++)
-            {
-                if (playerWell.blockList[j] == null)
-                    continue;
+            if (idList.Count <= 0)
+                break;     //nothing else to match, quit
 
-                if (playerWell.blockList[j].blockID == idList[i])
+            if (playerWell.blockList[i] == null)
+                continue;
+
+            int j = 0;
+            while (j < idList.Count)
+            {
+                
+                if (playerWell.blockList[i].blockID == idList[j])
                 {
                     //delete this block from the well
                     //Destroy(playerWell.blockList[j].gameObject);
-                    playerWell.blockList[j].NullifyBlock(playerWell.blockList[j]);
-                    //playerWell.blockList.RemoveAt(j);
-                    //j--;
                     comboCounter++;
+                    playerWell.blockList[i].NullifyBlock(playerWell.blockList[i]);
+                    Debug.Log("Block ID " + playerWell.blockList[i].blockID);
+                    
+                    
 
                     //are we at the end of the combo?
                     foreach (int endValue in comboEnderList)
                     {
-                        if (endValue == idList[i])
+                        if (endValue == idList[j])
                         {
                             //combo ends here, display combo Counter to screen
                             Debug.Log("Combo Counter: " + comboCounter);
@@ -132,16 +138,16 @@ public class GameManager : MonoBehaviour
                          
                         }
                     }
-                    //var value = idList.First(comboEnderList => comboEnderList == idList[i]);
-                    //Debug.Log("Combo Ender ID: " + value);
-                    //idList.RemoveAt(i);
-                    //i--;
-
+                    idList.Remove(idList[j]);
+                    break;
 
                 }
+                else
+                {
+                    j++;
+                }
             }
-            //playerWell.blockList.Remove(playerWell.blockList[0]);
-            //playerWell.blockList.Contains(idList[i])
+           
         }
         //block removal complete
         idList.Clear();
