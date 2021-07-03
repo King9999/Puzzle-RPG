@@ -184,7 +184,18 @@ public class GameManager : MonoBehaviour
 
             hMatchList.Add(playerWell.blockList[i]);
             x++;
-           
+            
+            //check if the current block is on a new row, as we don't want to compare it against blocks on a different row.
+            if (x % playerWell.TotalCols == 0)
+            {
+                if (i + 2 < playerWell.blockList.Count)
+                {
+                    hMatchList.Add(playerWell.blockList[i + 1]);
+                    hMatchList.Add(playerWell.blockList[i + 2]);
+                    i += 2;
+                    x += 2;
+                }
+            }
 
             //horizontal check
             if (hMatchList.Count < 3)
@@ -273,13 +284,18 @@ public class GameManager : MonoBehaviour
             bool vMatchFound = false;            //we're on a new column so this must be reset.
             bool currentBlockVMatching = false;  //this too
 
-            //reset y to prevent out of bounds errors.
+            //Once we've reached the end of the previous column, we need to reset y as it will be out of bounds.
+            //Also need to clear the match list if necessary to prevent invalid matches with old columns.
             if (y >= vMatchList.Count - 1)
             {
                 if (matchingBlockCount > 0)
                     y = INIT_INDEX + matchingBlockCount; //we advance by the number of matched blocks to avoid comparing any matched blocks.
                 else
+                {
+                    //clear the entire match list
+                    vMatchList.Clear();
                     y = INIT_INDEX;
+                }
             }
 
             while (colIterator < playerWell.blockList.Count)
