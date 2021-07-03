@@ -266,12 +266,9 @@ public class GameManager : MonoBehaviour
         //add the current block to match list, then the block 6 blocks ahead from the current. Repeat until we reach end of block list.
         //It makes sense when you look at the blocks in game and see what it takes to check for vertical matches.
 
-        //bool currentBlockVMatching;
-        //bool vMatchFound;
         int vMatchCount = 0;                //tracks how many times a vertical match was found. Does not include matches of 4 or more.
         const int COLS = 6;                 //used for vertical matching
         List<Block> vMatchList = new List<Block>();
-        //List<int> idList = new List<int>();         //keeps record of blocks IDs that match.
 
         const int INIT_INDEX = 2;
         int y = INIT_INDEX;              //y always begins at 2 because we always compare a block against the previous two blocks in match list.

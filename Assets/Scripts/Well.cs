@@ -11,12 +11,13 @@ public class Well : MonoBehaviour
 
     bool drawReady;         //used to draw new blocks offscreen.
     public float RiseValue { get; set; }        //used to control how much blocks rise
-    public int RowDepth { get { return blockList.Count / TotalCols; }  }           //tracks how many rows are in the well.
     //public int CurrentCol { get; set; }          //iterators for the block list.
 
     //consts
     public int TotalRows { get; } = 12;     //the total number of blocks that can fill the well before overflow.
     public int TotalCols { get; } = 6;        //total number of blocks from side to side
+    public int RowDepth { get { return blockList.Count / TotalCols; } }           //tracks how many rows are in the well.
+
 
     // Start is called before the first frame update
     void Start()

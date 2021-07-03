@@ -10,7 +10,10 @@ public class Block : MonoBehaviour
     [Header("Blocks")]
     public Sprite blockSprite;
     public int blockID;         //each block will have a unique number. Makes it easy to locate and destroy it.
-    
+    float vy = 0;                   //controls how fast block falls.
+
+    //constant
+    float FallSpeed { get; } = -7f;
    
     //[System.Serializable]
     public enum BlockType
@@ -42,5 +45,28 @@ public class Block : MonoBehaviour
         b.GetComponent<SpriteRenderer>().enabled = false;
         b.GetComponent<BoxCollider2D>().enabled = false;
         b = null;
+    }
+
+    //Checks if block is on top of another block. If it returns false, then block falls.
+    public bool IsTouchingBlock()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position + new Vector3(0, -0.35f, 0), Vector2.down, 0.2f);
+
+        return hit.collider != null;
+    }
+
+    private void Update()
+    {
+        if (IsTouchingBlock())
+            vy = 0;
+        else /*if (!IsTouchingBlock() && blockType != BlockType.Null)*/
+            vy = FallSpeed;
+
+        transform.position = new Vector2(transform.position.x, transform.position.y + vy * Time.deltaTime);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        
     }
 }
