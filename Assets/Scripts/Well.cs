@@ -55,8 +55,18 @@ public class Well : MonoBehaviour
             GenerateBlocks(1, true);
 
             //increase the row position of all existing blocks.
-            foreach (Block block in blockList)
-                block.row++;
+            int row = RowDepth;
+            for (int i = 0; i < blockList.Count; i++)
+            {
+                if (i % 6 == 0)
+                {
+                    //on a new row
+                    row--;
+                }
+                blockList[i].row = row;
+            }
+            //foreach (Block block in blockList)
+                //block.row++;
 
             drawReady = false;
         }
@@ -169,6 +179,15 @@ public class Well : MonoBehaviour
         return newList;
     }
 
+    //checks if a block is resting on top of another block.
+    public bool BlockIsFalling(Block block)
+    {
+        if (block.row <= 1) 
+            return false;
+
+        int indexOfBlockBelowCurrent = (TotalCols * (block.row - 1)) + block.col;
+        return blockList[indexOfBlockBelowCurrent] == null;
+    }
     public bool BlocksMatching(Block.BlockType blockType)
     {
         bool isMatching = false;

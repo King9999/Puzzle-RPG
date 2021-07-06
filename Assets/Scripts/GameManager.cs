@@ -97,7 +97,21 @@ public class GameManager : MonoBehaviour
 
         //remove any matching blocks
         if (idList.Count > 0)
+        {
             RemoveMatchingBlocks(playerWells[PlayerOne]);
+
+            
+        }
+
+        //check for any blocks that should be falling
+        foreach (Block block in playerWells[PlayerOne].blockList)
+        {
+            if (playerWells[PlayerOne].BlockIsFalling(block))
+            {
+                Debug.Log("Block at [" + block.row + "," + block.col + "] is falling");
+            }
+        }
+
     }
 
     private void RemoveMatchingBlocks(Well playerWell)
