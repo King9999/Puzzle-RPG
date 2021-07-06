@@ -120,9 +120,10 @@ public class GameManager : MonoBehaviour
                 {
                     //delete this block from the well
                     //Destroy(playerWell.blockList[j].gameObject);
+                    //playerWell.blockList[j] = null;
                     comboCounter++;
                     playerWell.blockList[i].NullifyBlock(playerWell.blockList[i]);
-                    Debug.Log("Block ID " + playerWell.blockList[i].blockID);
+                    //Debug.Log("Block ID " + playerWell.blockList[i].blockID);
                     
                     
 
@@ -201,7 +202,8 @@ public class GameManager : MonoBehaviour
             if (hMatchList.Count < 3)
                 continue;   //not enough blocks, add next block.
 
-            if (hMatchList[x].blockType == hMatchList[x - 1].blockType && hMatchList[x].blockType == hMatchList[x - 2].blockType)
+            if (hMatchList[x].blockType != Block.BlockType.Null && 
+                hMatchList[x].blockType == hMatchList[x - 1].blockType && hMatchList[x].blockType == hMatchList[x - 2].blockType)
             {
                 currentBlockHMatching = true;
                 //we have a horizontal match
@@ -325,7 +327,8 @@ public class GameManager : MonoBehaviour
                     y = INIT_INDEX; //we must always be comparing three blocks, starting from the 3rd.
 
                 //compare block that y points to against the previous two blocks
-                if (vMatchList[y].blockType == vMatchList[y - 1].blockType && vMatchList[y].blockType == vMatchList[y - 2].blockType)
+                if (vMatchList[y].blockType != Block.BlockType.Null &&
+                    vMatchList[y].blockType == vMatchList[y - 1].blockType && vMatchList[y].blockType == vMatchList[y - 2].blockType)
                 {
                     currentBlockVMatching = true;
                     //we have a vertical match

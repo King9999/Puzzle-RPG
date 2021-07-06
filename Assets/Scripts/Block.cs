@@ -11,6 +11,8 @@ public class Block : MonoBehaviour
     public Sprite blockSprite;
     public int blockID;         //each block will have a unique number. Makes it easy to locate and destroy it.
     float vy = 0;                   //controls how fast block falls.
+    public int row;                    //block location in list.
+    public int col;
 
     //constant
     float FallSpeed { get; } = -7f;
@@ -50,19 +52,21 @@ public class Block : MonoBehaviour
     //Checks if block is on top of another block. If it returns false, then block falls.
     public bool IsTouchingBlock()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position + new Vector3(0, -0.35f, 0), Vector2.down, 0.2f);
+        //RaycastHit2D hit = Physics2D.Raycast(transform.position /*+ new Vector3(0, -0.35f, 0)*/, Vector2.down, 0.2f);
 
-        return hit.collider != null;
+        //return hit.collider != null;
+        return false;
     }
 
     private void Update()
     {
-        if (IsTouchingBlock())
+        //check if there's a block 
+        /*if (IsTouchingBlock())
             vy = 0;
-        else /*if (!IsTouchingBlock() && blockType != BlockType.Null)*/
-            vy = FallSpeed;
+        else if (!IsTouchingBlock() && blockType != BlockType.Null)
+            vy = FallSpeed;*/
 
-        transform.position = new Vector2(transform.position.x, transform.position.y + vy * Time.deltaTime);
+        //transform.position = new Vector2(transform.position.x, transform.position.y + vy * Time.deltaTime);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

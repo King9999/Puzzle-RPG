@@ -43,7 +43,9 @@ public class Well : MonoBehaviour
             {
                 float yBounds = GetComponentInChildren<SpriteRenderer>().bounds.min.y * 2;
                 if (blockList[i].transform.position.y + blockList[i].GetComponent<SpriteRenderer>().bounds.min.y - yOffset > yBounds)
+                {
                     drawReady = true;
+                }
             }
         }
 
@@ -51,10 +53,16 @@ public class Well : MonoBehaviour
         if (drawReady == true)
         {
             GenerateBlocks(1, true);
+
+            //increase the row position of all existing blocks.
+            foreach (Block block in blockList)
+                block.row++;
+
             drawReady = false;
         }
 
     }
+
 
     /* Summary:
      *      Generate rows of blocks.
@@ -92,6 +100,8 @@ public class Well : MonoBehaviour
                     //generate ID
                     block.blockID = GameManager.instance.blockID;
                     GameManager.instance.blockID++;
+                    block.row = i;
+                    block.col = j;
                     blockList.Add(block);
                 }
                 //RowDepth++;
@@ -122,6 +132,8 @@ public class Well : MonoBehaviour
                     //generate ID
                     block.blockID = GameManager.instance.blockID;
                     GameManager.instance.blockID++;
+                    block.row = i;
+                    block.col = j;
                     blockList.Add(block);
                 }
                 //RowDepth++;
