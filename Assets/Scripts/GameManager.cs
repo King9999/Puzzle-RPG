@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
 
     public float riseRate;                  //controls the rate at which blocks rise. Rate is in seconds.
     public float riseValue;                 //how much the blocks rise.
-    float currentTime;                      //timestamp
+    float[] currentTime;                      //timestamp
     [HideInInspector] public int blockID;   //assigns unique block IDs when a new block is generated.
 
     //constants
@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     const int PLAYER_WELL_1 = 0;
     const int PLAYER_WELL_2 = 1;
     const float INIT_RISE_RATE = 1f;
+    public float InitRiseRate { get; } = 1f; 
     const float INIT_RISE_VALUE = 0.05f;
     
     public int PlayerOne { get; } = 0;
@@ -42,16 +43,27 @@ public class GameManager : MonoBehaviour
     {
         Random.InitState(34469);        //TODO: Used for testing block matches. Must be removed when game is ready.
         blockID = 0;
-        riseRate = INIT_RISE_RATE;
-        riseValue = INIT_RISE_VALUE;
-        currentTime = 0;
+        
         //ensure both wells have the same initial blocks. Any blocks generated afterwards can be different.
         //playerWells[PLAYER_WELL_1].InitializeBlocks();
         playerWells[PlayerOne].GenerateBlocks(3);
         playerWells[PlayerTwo].blockList = playerWells[PlayerTwo].CopyBlockList(playerWells[PlayerOne].blockList, 3);
 
+        //rise rate setup
+        riseRate = InitRiseRate;
+        riseValue = INIT_RISE_VALUE;
+
         foreach (Well well in playerWells)
+        {
+            SetRiseRate(well, riseRate);
             well.RiseValue = riseValue;
+        }
+
+        currentTime = new float[2];
+        for (int i = 0; i < currentTime.Length; i++)
+            currentTime[i] = 0;
+       
+
 
         //player set up
         player[PlayerOne].playerID = PlayerOne;
@@ -73,16 +85,16 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         //raise blocks
-        if (Time.time > currentTime + riseRate)
+        for (int i = 0; i < playerWells.Length; i++)
         {
-            for (int i = 0; i < playerWells.Length; i++)
-            {
+            if (Time.time > currentTime[i] + playerWells[i].RiseRate)
+            {               
                 playerWells[i].RaiseBlocks(playerWells[i].RiseValue);
                 cursors[i].transform.position = new Vector3(cursors[i].transform.position.x, cursors[i].transform.position.y + riseValue, cursors[i].Z_Value);
+                currentTime[i] = Time.time;
             }
-
-            currentTime = Time.time;
         }
 
         //update cursor positions       
@@ -98,9 +110,7 @@ public class GameManager : MonoBehaviour
         //remove any matching blocks
         if (idList.Count > 0)
         {
-            RemoveMatchingBlocks(playerWells[PlayerOne]);
-
-            
+            RemoveMatchingBlocks(playerWells[PlayerOne]);           
         }
 
         //check for any blocks that should be falling
@@ -108,12 +118,18 @@ public class GameManager : MonoBehaviour
         {
             if (playerWells[PlayerOne].BlockIsFalling(block))
             {
+                //drop the block until it lands on another block
+                block.transform.position = new Vector2(block.transform.position.x, block.transform.position.y - 1 * Time.deltaTime);
                 Debug.Log("Block at [" + block.row + "," + block.col + "] is falling");
             }
         }
 
     }
 
+    public void SetRiseRate(Well well, float value)
+    {
+       well.RiseRate = value;
+    }
     private void RemoveMatchingBlocks(Well playerWell)
     {
         byte comboCounter = 0;

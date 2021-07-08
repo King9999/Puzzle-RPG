@@ -71,6 +71,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Raise Blocks",
+                    "type": "Button",
+                    "id": "c748a113-fdae-470f-9b19-f6713da47b2f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -126,6 +134,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "A Button",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "da3e2e8b-e4eb-4d24-9cec-0501f8ed8244",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Raise Blocks",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9130dc23-d922-4130-a73e-c2b23dd03473",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Raise Blocks",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

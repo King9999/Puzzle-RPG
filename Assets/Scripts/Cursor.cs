@@ -16,6 +16,7 @@ public class Cursor : MonoBehaviour
     public bool isAIControlled = false;            //if true, AI moves the cursor, not the controller.
     float xOffset = 0.1f;
     float yOffset = 0.55f;
+    bool shoulderButtonHeld;                      
 
     //int CurrentIndex;                           //tracks the current index in the block list.
 
@@ -33,14 +34,27 @@ public class Cursor : MonoBehaviour
 
         //position the second sprite so that it's to the right of the main cursor.
         cursorSprites[1].transform.position = new Vector3(cursorSprites[1].transform.position.x + 1, cursorSprites[1].transform.position.y, Z_Value);
+
+        shoulderButtonHeld = false;
     }
     //the cursor rises at the same rate as the blocks.
     private void Update()
     {
         CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
 
-        //transform.position = new Vector3(GameManager.instance.playerWells[0].blockList[CurrentIndex].transform.position.x,
-           //GameManager.instance.playerWells[0].blockList[CurrentIndex].transform.position.y, Z_Value);
+        //get controls for shoulder buttons on gamepad (button can be held down)
+        var pad = Gamepad.current;
+
+        if (pad != null && (pad.rightShoulder.isPressed || pad.leftShoulder.isPressed))
+        {
+            //change rise rate to 0.02
+            GameManager.instance.playerWells[GameManager.instance.PlayerOne].RiseRate = 0.02f;
+        }
+        else
+        {
+            //reset rise rate
+            GameManager.instance.playerWells[GameManager.instance.PlayerOne].RiseRate = GameManager.instance.InitRiseRate;
+        }
     }
 
     //Gets the block data that the cursor is currently resting on.
@@ -156,5 +170,24 @@ public class Cursor : MonoBehaviour
         }
     }
 
-    #endregion
-}
+    public void RaiseBlocksManually(InputAction.CallbackContext context)
+    {
+        if (isAIControlled)
+            return;
+
+        /*if (context.phase == InputActionPhase.Performed)
+        {
+            shoulderButtonHeld = true;
+            Debug.Log("Shoulder button held: " + shoulderButtonHeld);
+        }
+
+        if (context.phase == InputActionPhase.Canceled) //button is released
+        {
+            //Debug.Log("Letting go of button");
+            shoulderButtonHeld = false;
+            Debug.Log("Shoulder button held: " + shoulderButtonHeld);
+        }*/
+    }
+
+        #endregion
+    }

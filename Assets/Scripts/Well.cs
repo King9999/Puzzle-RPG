@@ -11,6 +11,7 @@ public class Well : MonoBehaviour
 
     bool drawReady;         //used to draw new blocks offscreen.
     public float RiseValue { get; set; }        //used to control how much blocks rise
+    public float RiseRate { get; set; }         //the rate at which blocks rise.
     //public int CurrentCol { get; set; }          //iterators for the block list.
 
     //consts
@@ -182,11 +183,11 @@ public class Well : MonoBehaviour
     //checks if a block is resting on top of another block.
     public bool BlockIsFalling(Block block)
     {
-        if (block.row <= 1) 
+        if (block.row <= 1 || block.blockType == Block.BlockType.Null) 
             return false;
 
         int indexOfBlockBelowCurrent = (TotalCols * (block.row - 1)) + block.col;
-        return blockList[indexOfBlockBelowCurrent] == null;
+        return blockList[indexOfBlockBelowCurrent].blockType == Block.BlockType.Null;
     }
     public bool BlocksMatching(Block.BlockType blockType)
     {
