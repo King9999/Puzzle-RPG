@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Random.InitState(34469);        //TODO: Used for testing block matches. Must be removed when game is ready.
+        Random.InitState(34471);        //TODO: Used for testing block matches. Must be removed when game is ready.
         blockID = 0;
         
         //ensure both wells have the same initial blocks. Any blocks generated afterwards can be different.
@@ -114,14 +114,122 @@ public class GameManager : MonoBehaviour
         }
 
         //check for any blocks that should be falling
-        foreach (Block block in playerWells[PlayerOne].blockList)
+        for (int i = 0; i < playerWells[PlayerOne].blockList.Count; i++)
         {
-            if (playerWells[PlayerOne].BlockIsFalling(block))
+            Well playerWell = playerWells[PlayerOne];
+
+            int totalCols = playerWells[PlayerOne].TotalCols;
+            //int colIterator = playerWell.blockList.Count - totalCols + i;    //iterates through the blocklist by column, starting from bottom.
+            //Block block = playerWells[PlayerOne].blockList[colIterator];
+            int nullCount = 0;              //tracks the number of null blocks
+
+            //I take care to check if we're on the topmost row because there won't be any blocks to drop.
+            if (playerWell.blockList[i].row < playerWell.RowDepth - 1 && playerWell.blockList[i].blockType == Block.BlockType.Null)
             {
-                //drop the block until it lands on another block
-                block.transform.position = new Vector2(block.transform.position.x, block.transform.position.y - 1 * Time.deltaTime);
-                Debug.Log("Block at [" + block.row + "," + block.col + "] is falling");
+                for (int j = i; j >= 0; j -= totalCols)
+                {
+                    int indexOfBlockAbove = j - totalCols;
+
+                    if (indexOfBlockAbove < 0)
+                        break; //can't proceed as we've reached topmost row.
+
+                    if (playerWell.blockList[indexOfBlockAbove].blockType != Block.BlockType.Null)
+                    {
+                        //shift this block down to the null block.
+                        Block tempBlock = playerWell.blockList[j];
+                        Vector2 tempPos = new Vector2(tempBlock.transform.position.x, tempBlock.transform.position.y);
+                        playerWell.blockList[j].transform.position = playerWell.blockList[indexOfBlockAbove].transform.position;
+                        playerWell.blockList[j] = playerWell.blockList[indexOfBlockAbove];
+                        playerWell.blockList[indexOfBlockAbove].transform.position = tempPos;
+                        playerWell.blockList[indexOfBlockAbove] = tempBlock;
+                        //playerWell.blockList[indexOfBlockAbove].NullifyBlock(/*playerWell.blockList[indexOfBlockAbove]*/);
+                        Debug.Log("New Block: " + playerWell.blockList[j].blockType);
+                    }
+                }
             }
+
+            //start from the bottom of each column and check each block to see if it's null
+            /*while (colIterator >= 0)
+            {
+                //if null, then all blocks above it must fall. Use for loop here
+                if (colIterator >= 0 && playerWell.blockList[colIterator].blockType == Block.BlockType.Null)
+                {
+                    for (int j = playerWell.blockList[colIterator].row; j < playerWell.RowDepth; j++)
+                    {
+                        if (playerWell.blockList[colIterator - totalCols].blockType != Block.BlockType.Null)
+                        {
+                            //shift this block down to the null block.
+                            playerWell.blockList[colIterator - totalCols].transform.position = playerWell.blockList[colIterator].transform.position;
+                            playerWell.blockList[colIterator] = playerWell.blockList[colIterator - totalCols];
+                            playerWell.blockList[colIterator - totalCols].NullifyBlock(playerWell.blockList[colIterator - totalCols]);
+                        }
+                        colIterator -= totalCols;
+                    }
+                }
+                else
+                {
+                    colIterator -= totalCols;
+                }
+            }*/
+
+
+
+
+
+            /*while (colIterator < playerWell.blockList.Count)
+            {
+                Block block = playerWell.blockList[colIterator];
+                if (playerWell.BlockIsFalling(block))
+                {
+                    colIterator += playerWells[PlayerOne].TotalCols;
+                    //count number of null blocks in the column
+                    //while (colIterator < playerWell.blockList.Count)
+                    //{
+                        if (playerWells[PlayerOne].blockList[colIterator].blockType == Block.BlockType.Null)
+                            nullCount++;
+                        //colIterator += playerWells[PlayerOne].TotalCols;
+                    //}
+
+                    //reduce block's y pos by 1 for each null block
+                    block.transform.position = new Vector2(block.transform.position.x, block.transform.position.y - nullCount);
+                    block.row -= nullCount;
+
+                    //update block's position in list.
+                    Block temp = block;
+                    //Vector2 tempPos = new Vector2(temp.transform.position.x, temp.transform.position.y);    //need a separate copy of temp position so we don't refer directly to the temp object's position
+                    //block.transform.position = new Vector2(block.transform.position.x, block.transform.position.y - nullCount);
+                    int newRow = (playerWell.TotalCols * block.row) + block.col;
+                    block = playerWell.blockList[newRow];
+
+                    //playerWell.blockList[newRow].transform.position = tempPos;
+                    //playerWell.blockList[newRow] = null;
+                }
+                else
+                {
+                    colIterator += playerWells[PlayerOne].TotalCols;
+                }
+            }*/
+
+            /*if (playerWells[PlayerOne].BlockIsFalling(block))
+            {
+                //count number of null blocks in the column
+               
+                   
+                    //reduce block's y pos by 1 for each null block
+                    //do this for each non-null block in column
+                    //update block's position in list.
+
+                    //set the block's position to the block below
+                    int indexOfBlockBelow = (playerWells[PlayerOne].TotalCols * (block.row - 1)) + block.col;
+                //Block tempBlock = playerWells[PlayerOne].blockList[indexOfBlockBelow];
+                block.transform.position = playerWells[PlayerOne].blockList[indexOfBlockBelow].transform.position;
+                playerWells[PlayerOne].blockList[indexOfBlockBelow] = block;
+                block = null;
+
+                //drop the block until it lands on another block
+                //block.transform.position = new Vector2(block.transform.position.x, block.transform.position.y - 1 * Time.deltaTime);
+                Debug.Log("Block at [" + block.row + "," + block.col + "] is falling");
+            }*/
         }
 
     }
@@ -152,7 +260,7 @@ public class GameManager : MonoBehaviour
                     //Destroy(playerWell.blockList[j].gameObject);
                     //playerWell.blockList[j] = null;
                     comboCounter++;
-                    playerWell.blockList[i].NullifyBlock(playerWell.blockList[i]);
+                    playerWell.blockList[i].NullifyBlock(/*playerWell.blockList[i]*/);
                     //Debug.Log("Block ID " + playerWell.blockList[i].blockID);
                     
                     

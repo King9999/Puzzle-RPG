@@ -41,12 +41,12 @@ public class Block : MonoBehaviour
         GetComponent<SpriteRenderer>().sprite = blockSprite;
     }
 
-    public void NullifyBlock(Block b)
+    public void NullifyBlock()
     {
-        b.blockType = BlockType.Null;
-        b.GetComponent<SpriteRenderer>().enabled = false;
-        b.GetComponent<BoxCollider2D>().enabled = false;
-        b = null;
+        blockType = BlockType.Null;
+        GetComponent<SpriteRenderer>().enabled = false;
+        GetComponent<BoxCollider2D>().enabled = false;
+        //b = null;
     }
 
     //Checks if block is on top of another block. If it returns false, then block falls.
