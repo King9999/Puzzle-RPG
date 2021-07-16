@@ -17,7 +17,7 @@ public class Well : MonoBehaviour
     //consts
     public int TotalRows { get; } = 12;     //the total number of blocks that can fill the well before overflow.
     public int TotalCols { get; } = 6;        //total number of blocks from side to side
-    //public int RowDepth { get { return blockList.Count / TotalCols; } }           //tracks how many rows are in the well.
+    public int RowDepth { get { return blockList.Count / TotalCols; } }           //tracks how many rows are in the well.
 
 
     // Start is called before the first frame update
@@ -31,7 +31,7 @@ public class Well : MonoBehaviour
 
     }
 
-    public int RowDepth()
+    /*public int RowDepth()
     {
         int rowCount = 0;
         bool rowEmpty = false;  //if true, then entire row is null blocks and does not count towards row depth.
@@ -53,7 +53,7 @@ public class Well : MonoBehaviour
             }
         }
         return rowCount;
-    }
+    }*/
 
     public void RaiseBlocks(float riseValue)
     {
@@ -80,7 +80,7 @@ public class Well : MonoBehaviour
             GenerateBlocks(1, true);
 
             //increase the row position of all existing blocks.
-            int row = RowDepth();
+            int row = RowDepth;
             for (int i = 0; i < blockList.Count; i++)
             {
                 if (i % TotalCols == 0)

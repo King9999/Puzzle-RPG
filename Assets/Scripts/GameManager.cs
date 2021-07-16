@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviour
             int nullCount = 0;              //tracks the number of null blocks
 
             //I take care to check if we're on the topmost row because there won't be any blocks to drop.
-            if (playerWell.blockList[i].row < playerWell.RowDepth() - 1 && playerWell.blockList[i].blockType == Block.BlockType.Null)
+            if (playerWell.blockList[i].row < playerWell.RowDepth - 1 && playerWell.blockList[i].blockType == Block.BlockType.Null)
             {
                 for (int j = i; j >= 0; j -= totalCols)
                 {
@@ -302,7 +302,7 @@ public class GameManager : MonoBehaviour
     public void CheckForMatches(Well playerWell)
     {
         //cannot proceed with this method in certain conditions
-        if (playerWell.blockList.Count < 3 || playerWell.RowDepth() < 3)
+        if (playerWell.blockList.Count < 3 || playerWell.RowDepth < 3)
             return;
   
         int matchCount = 0;                 //tracks how many matches were made between different block types

@@ -100,7 +100,7 @@ public class Cursor : MonoBehaviour
         {
             currentTime = Time.time;
             //transform.position = new Vector3(transform.position.x, transform.position.y - 1, Z_Value);
-            if (CurrentRow + 1 <= GameManager.instance.playerWells[0].RowDepth() - 1)
+            if (CurrentRow + 1 <= GameManager.instance.playerWells[0].RowDepth - 1)
             {
                 CurrentRow++;
                 CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
