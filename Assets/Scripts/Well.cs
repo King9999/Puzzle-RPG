@@ -17,7 +17,7 @@ public class Well : MonoBehaviour
     //consts
     public int TotalRows { get; } = 12;     //the total number of blocks that can fill the well before overflow.
     public int TotalCols { get; } = 6;        //total number of blocks from side to side
-    public int RowDepth { get { return blockList.Count / TotalCols; } }           //tracks how many rows are in the well.
+    //public int RowDepth { get { return blockList.Count / TotalCols; } }           //tracks how many rows are in the well.
 
 
     // Start is called before the first frame update
@@ -29,6 +29,30 @@ public class Well : MonoBehaviour
         drawReady = false;
         //RowDepth = 0;
 
+    }
+
+    public int RowDepth()
+    {
+        int rowCount = 0;
+        bool rowEmpty = false;  //if true, then entire row is null blocks and does not count towards row depth.
+        int emptyCount = 0;     //if this number is 6 or more, then row is empty.
+        //returns all rows that have at least one non-null block in it.
+        for (int i = 1; i < blockList.Count; i += 2)
+        {
+            if (blockList[i].blockType == Block.BlockType.Null && blockList[i - 1].blockType == Block.BlockType.Null)
+                emptyCount += 2;
+
+            if (emptyCount >= TotalCols)
+                rowEmpty = true;
+
+            if (i % TotalCols - 1 == 0)
+            {
+                emptyCount = 0; //we're on new row
+                if (!rowEmpty)
+                    rowCount++;
+            }
+        }
+        return rowCount;
     }
 
     public void RaiseBlocks(float riseValue)
@@ -56,10 +80,10 @@ public class Well : MonoBehaviour
             GenerateBlocks(1, true);
 
             //increase the row position of all existing blocks.
-            int row = RowDepth;
+            int row = RowDepth();
             for (int i = 0; i < blockList.Count; i++)
             {
-                if (i % 6 == 0)
+                if (i % TotalCols == 0)
                 {
                     //on a new row
                     row--;

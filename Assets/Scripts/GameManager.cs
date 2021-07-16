@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Random.InitState(34471);        //TODO: Used for testing block matches. Must be removed when game is ready.
+        Random.InitState(34472);        //TODO: Used for testing block matches. Must be removed when game is ready.
         blockID = 0;
         
         //ensure both wells have the same initial blocks. Any blocks generated afterwards can be different.
@@ -94,6 +94,7 @@ public class GameManager : MonoBehaviour
                 playerWells[i].RaiseBlocks(playerWells[i].RiseValue);
                 cursors[i].transform.position = new Vector3(cursors[i].transform.position.x, cursors[i].transform.position.y + riseValue, cursors[i].Z_Value);
                 currentTime[i] = Time.time;
+               // Debug.Log("Row Depth: " + playerWells[0].RowDepth());
             }
         }
 
@@ -105,7 +106,7 @@ public class GameManager : MonoBehaviour
         }
 
         //check for block matches, both vertical and horizontal
-        //CheckForMatches(playerWells[PlayerOne]);
+        CheckForMatches(playerWells[PlayerOne]);
 
         //remove any matching blocks
         if (idList.Count > 0)
@@ -124,7 +125,7 @@ public class GameManager : MonoBehaviour
             int nullCount = 0;              //tracks the number of null blocks
 
             //I take care to check if we're on the topmost row because there won't be any blocks to drop.
-            if (playerWell.blockList[i].row < playerWell.RowDepth - 1 && playerWell.blockList[i].blockType == Block.BlockType.Null)
+            if (playerWell.blockList[i].row < playerWell.RowDepth() - 1 && playerWell.blockList[i].blockType == Block.BlockType.Null)
             {
                 for (int j = i; j >= 0; j -= totalCols)
                 {
@@ -143,7 +144,7 @@ public class GameManager : MonoBehaviour
                         playerWell.blockList[indexOfBlockAbove].transform.position = tempPos;
                         playerWell.blockList[indexOfBlockAbove] = tempBlock;
                         //playerWell.blockList[indexOfBlockAbove].NullifyBlock(/*playerWell.blockList[indexOfBlockAbove]*/);
-                        Debug.Log("New Block: " + playerWell.blockList[j].blockType);
+                        //Debug.Log("New Block: " + playerWell.blockList[j].blockType);
                     }
                 }
             }
@@ -293,12 +294,15 @@ public class GameManager : MonoBehaviour
         comboEnderList.Clear();
         idList.Capacity = 0;
         comboEnderList.Capacity = 0;
+
+        //scan all rows. If a row consists only of null blocks, remove it.
+        //for (int i = 0; )
     }
 
     public void CheckForMatches(Well playerWell)
     {
         //cannot proceed with this method in certain conditions
-        if (playerWell.blockList.Count < 3 || playerWell.RowDepth < 3)
+        if (playerWell.blockList.Count < 3 || playerWell.RowDepth() < 3)
             return;
   
         int matchCount = 0;                 //tracks how many matches were made between different block types
@@ -555,7 +559,7 @@ public class GameManager : MonoBehaviour
 
         //if (matchCount > 0)
         //{
-            string list = "Horizontal matches: ";
+            /*string list = "Horizontal matches: ";
             //Debug.Log("Total matches: " + matchCount);
             foreach (Block b in hMatchList)
             {
@@ -572,7 +576,7 @@ public class GameManager : MonoBehaviour
                     continue;
                 list += b.blockType + ", ";
             }
-            Debug.Log(list);
+            Debug.Log(list);*/
         //}
     }
 

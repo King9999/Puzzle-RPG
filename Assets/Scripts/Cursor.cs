@@ -85,7 +85,8 @@ public class Cursor : MonoBehaviour
             {
                 CurrentRow--;
                 CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
-                Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
+                //Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
+                Debug.Log("Row: " + CurrentRow + " Col: " + CurrentCol);
             }
         }
     }
@@ -99,11 +100,13 @@ public class Cursor : MonoBehaviour
         {
             currentTime = Time.time;
             //transform.position = new Vector3(transform.position.x, transform.position.y - 1, Z_Value);
-            if (CurrentRow + 1 <= ROW - 1)
+            if (CurrentRow + 1 <= GameManager.instance.playerWells[0].RowDepth() - 1)
             {
                 CurrentRow++;
                 CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
-                Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
+                //Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
+                Debug.Log("Row: " + CurrentRow + " Col: " + CurrentCol);
+
             }
         }
     }
@@ -121,7 +124,9 @@ public class Cursor : MonoBehaviour
             {
                 CurrentCol--;
                 CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
-                Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
+                // Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
+                Debug.Log("Row: " + CurrentRow + " Col: " + CurrentCol);
+
             }
         }
     }
@@ -138,7 +143,9 @@ public class Cursor : MonoBehaviour
             {
                 CurrentCol++;
                 CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
-                Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
+                //Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
+                Debug.Log("Row: " + CurrentRow + " Col: " + CurrentCol);
+
             }
         }
     }
@@ -164,7 +171,7 @@ public class Cursor : MonoBehaviour
             playerWell.blockList[CurrentIndex + 1] = temp;
 
             //check for a match
-            GameManager.instance.CheckForMatches(playerWell);
+            //GameManager.instance.CheckForMatches(playerWell);
 
            //Debug.Log("New Blocks: " + GameManager.instance.playerWells[playerOne].blockList[CurrentIndex].blockType + " & " + GameManager.instance.playerWells[playerOne].blockList[CurrentIndex + 1].blockType);
         }
