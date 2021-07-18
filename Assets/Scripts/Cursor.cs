@@ -14,8 +14,8 @@ public class Cursor : MonoBehaviour
     public float Z_Value { get; } = -2f;              //ensures that cursors is always displayed over blocks.
     float currentTime = 0;
     public bool isAIControlled = false;            //if true, AI moves the cursor, not the controller.
-    float xOffset = 0.1f;
-    float yOffset = 0.55f;
+    float xOffset = -2.5f;
+    float yOffset = -5.9f;
     bool shoulderButtonHeld;                      
 
     //int CurrentIndex;                           //tracks the current index in the block list.
@@ -31,6 +31,9 @@ public class Cursor : MonoBehaviour
         CurrentRow = ROW / 2;
         CurrentCol = COLUMN / 2;
 
+        //transform.position = new Vector3(GameManager.instance.playerWells[0].transform.position.x + CurrentCol + xOffset, 
+            //GameManager.instance.playerWells[0].transform.position.y + CurrentRow + yOffset, Z_Value);
+
         //position the second sprite so that it's to the right of the main cursor.
         cursorSprites[1].transform.position = new Vector3(cursorSprites[1].transform.position.x + 1, cursorSprites[1].transform.position.y, Z_Value);
 
@@ -40,6 +43,9 @@ public class Cursor : MonoBehaviour
     private void Update()
     {
         CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
+
+        //transform.position = new Vector3(GameManager.instance.playerWells[0].transform.position.x + CurrentCol + xOffset,
+            //GameManager.instance.playerWells[0].transform.position.y + CurrentRow + yOffset, Z_Value);
 
         //get controls for shoulder buttons on gamepad (button can be held down)
         var pad = Gamepad.current;
