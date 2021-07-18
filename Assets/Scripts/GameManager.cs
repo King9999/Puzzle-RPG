@@ -102,7 +102,12 @@ public class GameManager : MonoBehaviour
        for (int i = 0; i < cursors.Length; i++)
         {
             int currentIndex = cursors[i].CurrentIndex;
-            cursors[i].transform.position = new Vector3(playerWells[i].blockList[currentIndex].transform.position.x, playerWells[i].blockList[currentIndex].transform.position.y, cursors[i].Z_Value);
+            int row = cursors[i].CurrentRow;
+            int col = cursors[i].CurrentCol;
+            float xOffset = -2.5f;
+            float yOffset = -5.9f;
+            //cursors[i].transform.position = new Vector3(playerWells[i].blockList[currentIndex].transform.position.x, playerWells[i].blockList[currentIndex].transform.position.y, cursors[i].Z_Value);
+            cursors[i].transform.position = new Vector3(playerWells[i].transform.position.x + col + xOffset, playerWells[i].transform.position.y + row + yOffset, cursors[i].Z_Value);
         }
 
         //check for block matches, both vertical and horizontal

@@ -46,11 +46,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 646744237cc339f4495553aa91463f31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockSprite: {fileID: 21300000, guid: 77e7e0aa7bbfb1f4f88d6bd5fc001d70, type: 3}
+  blockSprite: {fileID: 21300000, guid: 575ca5448ef5ba441aac865029946472, type: 3}
   blockID: 0
   row: 0
   col: 0
-  blockType: 3
+  blockType: 1
 --- !u!61 &4840447164434455477
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -138,7 +138,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 77e7e0aa7bbfb1f4f88d6bd5fc001d70, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 575ca5448ef5ba441aac865029946472, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

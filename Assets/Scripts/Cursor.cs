@@ -27,10 +27,9 @@ public class Cursor : MonoBehaviour
 
     private void Start()
     {
-        //offset is applied so that cursor lines up with blocks.
-        //transform.position = new Vector3(transform.position.x - xOffset, transform.position.y + yOffset, Z_Value);
-        CurrentRow = 0;
-        CurrentCol = 0;
+        //cursor is initially placed in centre of well
+        CurrentRow = ROW / 2;
+        CurrentCol = COLUMN / 2;
 
         //position the second sprite so that it's to the right of the main cursor.
         cursorSprites[1].transform.position = new Vector3(cursorSprites[1].transform.position.x + 1, cursorSprites[1].transform.position.y, Z_Value);
@@ -81,9 +80,9 @@ public class Cursor : MonoBehaviour
         {
             currentTime = Time.time;
             //transform.position = new Vector3(transform.position.x, transform.position.y + 1, Z_Value);
-            if (CurrentRow - 1 >= 0)
+            if (/*CurrentRow - 1 >= 0*/CurrentRow + 1 <= GameManager.instance.playerWells[0].TotalRows - 1)
             {
-                CurrentRow--;
+                CurrentRow++;
                 CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
                 //Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
                 Debug.Log("Row: " + CurrentRow + " Col: " + CurrentCol);
@@ -100,9 +99,9 @@ public class Cursor : MonoBehaviour
         {
             currentTime = Time.time;
             //transform.position = new Vector3(transform.position.x, transform.position.y - 1, Z_Value);
-            if (CurrentRow + 1 <= GameManager.instance.playerWells[0].RowDepth - 1)
+            if (CurrentRow - 1 >= 1/*CurrentRow + 1 <= GameManager.instance.playerWells[0].RowDepth - 1*/)  //we ignore the bottom row because it's reserved for new blocks.
             {
-                CurrentRow++;
+                CurrentRow--;
                 CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
                 //Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
                 Debug.Log("Row: " + CurrentRow + " Col: " + CurrentCol);

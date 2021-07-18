@@ -8,6 +8,7 @@ public class Well : MonoBehaviour
     public List<Block> blockList;        //holds all blocks in player well
     public Block blockPrefab;
     public BlockData[] blocks;
+    public int[,] wellArray;          //this serves as the game "map". the cursor moves around in here. Contains the block IDs
 
     bool drawReady;         //used to draw new blocks offscreen.
     public float RiseValue { get; set; }        //used to control how much blocks rise
@@ -15,9 +16,10 @@ public class Well : MonoBehaviour
     //public int CurrentCol { get; set; }          //iterators for the block list.
 
     //consts
-    public int TotalRows { get; } = 12;     //the total number of blocks that can fill the well before overflow.
+    public int TotalRows { get; } = 13;     //the total number of blocks that can fill the well before overflow. The 1st row is exclusively for newly created blocks.
     public int TotalCols { get; } = 6;        //total number of blocks from side to side
     public int RowDepth { get { return blockList.Count / TotalCols; } }           //tracks how many rows are in the well.
+    public int EmptySpace { get; } = -1;    //used in 2D array when no block is present.
 
 
     // Start is called before the first frame update
@@ -26,8 +28,16 @@ public class Well : MonoBehaviour
         //Vector3 screenPos = Camera.main.WorldToViewportPoint(GameManager.instance.transform.position);
         //RiseRate = INIT_BLOCK_SPEED;
         blockList = new List<Block>();
+        wellArray = new int[TotalRows, TotalCols];
+       
+        for (int i = 0; i < TotalRows; i++)
+        {
+            for (int j = 0; j < TotalCols; j++)
+            {
+                wellArray[i, j] = EmptySpace;
+            }
+        }
         drawReady = false;
-        //RowDepth = 0;
 
     }
 
