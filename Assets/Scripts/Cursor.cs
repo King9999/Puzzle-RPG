@@ -8,28 +8,28 @@ using UnityEngine.InputSystem;
 public class Cursor : MonoBehaviour
 {
     public SpriteRenderer[] cursorSprites;
-    const int ROW = 12;
-    const int COLUMN = 6;
     const float INPUT_DELAY = 0.1f;        //used to prevent rapid movement of left stick.
     public float Z_Value { get; } = -2f;              //ensures that cursors is always displayed over blocks.
     float currentTime = 0;
     public bool isAIControlled = false;            //if true, AI moves the cursor, not the controller.
-    float xOffset = -2.5f;
-    float yOffset = -5.9f;
+    const float xOffset = -2.5f;
+    const float yOffset = -6.5f;
     bool shoulderButtonHeld;                      
 
     //int CurrentIndex;                           //tracks the current index in the block list.
 
     public int CurrentRow { get; set; }         //used to get a block's position in block list.
     public int CurrentCol { get; set; }
+    public int TotalRows { get; } = 12;
+    public int TotalCols { get; } = 6;
 
     public int CurrentIndex { get; set; }       //tracks the current index in the block list.
 
     private void Start()
     {
         //cursor is initially placed in centre of well
-        CurrentRow = ROW / 2;
-        CurrentCol = COLUMN / 2;
+        CurrentRow = TotalRows / 2 - 1;
+        CurrentCol = TotalCols / 2 - 1;
 
         //transform.position = new Vector3(GameManager.instance.playerWells[0].transform.position.x + CurrentCol + xOffset, 
             //GameManager.instance.playerWells[0].transform.position.y + CurrentRow + yOffset, Z_Value);
@@ -42,7 +42,7 @@ public class Cursor : MonoBehaviour
     //the cursor rises at the same rate as the blocks.
     private void Update()
     {
-        CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
+        CurrentIndex = (TotalCols * CurrentRow) + CurrentCol;
 
         //transform.position = new Vector3(GameManager.instance.playerWells[0].transform.position.x + CurrentCol + xOffset,
             //GameManager.instance.playerWells[0].transform.position.y + CurrentRow + yOffset, Z_Value);
@@ -68,7 +68,7 @@ public class Cursor : MonoBehaviour
         //Get the cursor's current row and column position, and get the block data both cursors are resting on
         //Add the block data from block list.
         Block[,] blockArray = new Block[1, 2];
-        CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
+        CurrentIndex = (TotalCols * CurrentRow) + CurrentCol;
         blockArray[0, 0] = blocks[CurrentIndex];
         blockArray[0, 1] = blocks[CurrentIndex + 1];
 
@@ -85,11 +85,11 @@ public class Cursor : MonoBehaviour
         if (Time.time > currentTime + INPUT_DELAY && context.phase == InputActionPhase.Performed)
         {
             currentTime = Time.time;
-            //transform.position = new Vector3(transform.position.x, transform.position.y + 1, Z_Value);
             if (/*CurrentRow - 1 >= 0*/CurrentRow + 1 <= GameManager.instance.playerWells[0].TotalRows - 1)
             {
                 CurrentRow++;
-                CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
+                transform.position = new Vector3(transform.position.x, transform.position.y + 1, Z_Value);
+                CurrentIndex = (TotalCols * CurrentRow) + CurrentCol;
                 //Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
                 Debug.Log("Row: " + CurrentRow + " Col: " + CurrentCol);
             }
@@ -104,11 +104,11 @@ public class Cursor : MonoBehaviour
         if (Time.time > currentTime + INPUT_DELAY && context.phase == InputActionPhase.Performed)
         {
             currentTime = Time.time;
-            //transform.position = new Vector3(transform.position.x, transform.position.y - 1, Z_Value);
             if (CurrentRow - 1 >= 1/*CurrentRow + 1 <= GameManager.instance.playerWells[0].RowDepth - 1*/)  //we ignore the bottom row because it's reserved for new blocks.
             {
                 CurrentRow--;
-                CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
+                transform.position = new Vector3(transform.position.x, transform.position.y - 1, Z_Value);
+                CurrentIndex = (TotalCols * CurrentRow) + CurrentCol;
                 //Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
                 Debug.Log("Row: " + CurrentRow + " Col: " + CurrentCol);
 
@@ -124,11 +124,11 @@ public class Cursor : MonoBehaviour
         if (Time.time > currentTime + INPUT_DELAY && context.phase == InputActionPhase.Performed)
         {
             currentTime = Time.time;
-            //transform.position = new Vector3(transform.position.x - 1, transform.position.y, Z_Value);
             if (CurrentCol - 1 >= 0)
             {
                 CurrentCol--;
-                CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
+                transform.position = new Vector3(transform.position.x - 1, transform.position.y, Z_Value);
+                CurrentIndex = (TotalCols * CurrentRow) + CurrentCol;
                 // Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
                 Debug.Log("Row: " + CurrentRow + " Col: " + CurrentCol);
 
@@ -144,10 +144,11 @@ public class Cursor : MonoBehaviour
         if (Time.time > currentTime + INPUT_DELAY && context.phase == InputActionPhase.Performed)
         {
             currentTime = Time.time;
-            if (CurrentCol + 1 <= COLUMN - 2)   //subtract 2 so that I can capture the block to the right of the cursor without worrying about capturing a space outside of the well.
+            if (CurrentCol + 1 <= TotalCols - 2)   //subtract 2 so that I can capture the block to the right of the cursor without worrying about capturing a space outside of the well.
             {
                 CurrentCol++;
-                CurrentIndex = (COLUMN * CurrentRow) + CurrentCol;
+                transform.position = new Vector3(transform.position.x + 1, transform.position.y, Z_Value);
+                CurrentIndex = (TotalCols * CurrentRow) + CurrentCol;
                 //Debug.Log("Current Blocks: " + GameManager.instance.playerWells[0].blockList[CurrentIndex].blockType + ", " + GameManager.instance.playerWells[0].blockList[CurrentIndex + 1].blockType);
                 Debug.Log("Row: " + CurrentRow + " Col: " + CurrentCol);
 

@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
 
     public float riseRate;                  //controls the rate at which blocks rise. Rate is in seconds.
     public float riseValue;                 //how much the blocks rise.
+    float riseTotal = 0;                //whenever this is 1, increases row count by 1.
     float[] currentTime;                      //timestamp
     [HideInInspector] public int blockID;   //assigns unique block IDs when a new block is generated.
 
@@ -45,9 +46,18 @@ public class GameManager : MonoBehaviour
         blockID = 0;
         
         //ensure both wells have the same initial blocks. Any blocks generated afterwards can be different.
-        //playerWells[PLAYER_WELL_1].InitializeBlocks();
         playerWells[PlayerOne].GenerateBlocks(3);
         playerWells[PlayerTwo].blockList = playerWells[PlayerTwo].CopyBlockList(playerWells[PlayerOne].blockList, 3);
+
+        //cursor set up
+        for (int i = 0; i < cursors.Length; i++)
+        {
+            int row = cursors[i].CurrentRow;
+            int col = cursors[i].CurrentCol;
+            float xOffset = -2.5f;
+            float yOffset = -6.5f;
+            cursors[i].transform.position = new Vector3(playerWells[i].transform.position.x + col + xOffset, playerWells[i].transform.position.y + row + yOffset, cursors[i].Z_Value);
+        }
 
         //rise rate setup
         riseRate = InitRiseRate;
@@ -71,6 +81,7 @@ public class GameManager : MonoBehaviour
         GameUI.instance.healthPointText[PlayerOne].text = player[PlayerOne].healthPoints + "/" + player[PlayerOne].maxHealthPoints;
         GameUI.instance.healthBars[PlayerOne].SetMaxValue(player[PlayerOne].healthPoints);
 
+
         player[PlayerTwo].playerID = PlayerTwo;
         GameUI.instance.playerNameText[PlayerTwo].text = player[PlayerTwo].className;
         GameUI.instance.healthPointText[PlayerTwo].text = player[PlayerTwo].healthPoints + "/" + player[PlayerTwo].maxHealthPoints;
@@ -86,29 +97,49 @@ public class GameManager : MonoBehaviour
     void Update()
     {
 
-        //raise blocks
+        //raise blocks and cursors
         for (int i = 0; i < playerWells.Length; i++)
         {
             if (Time.time > currentTime[i] + playerWells[i].RiseRate)
             {               
                 playerWells[i].RaiseBlocks(playerWells[i].RiseValue);
                 cursors[i].transform.position = new Vector3(cursors[i].transform.position.x, cursors[i].transform.position.y + riseValue, cursors[i].Z_Value);
+
+                //must adjust cursor row position since cursors are always rising.
+                if (i == PlayerOne)
+                {
+                    riseTotal += riseValue;
+                    if (riseTotal >= 1)
+                    {
+                        riseTotal = 0;
+                        if (cursors[i].CurrentRow >= cursors[i].TotalRows - 1)
+                        {
+                            //we're at the top of the well; reduce row position and screen position.
+                            cursors[i].CurrentRow--;
+                            cursors[i].transform.position = new Vector3(cursors[i].transform.position.x, cursors[i].transform.position.y - 1, cursors[i].Z_Value);
+                        }
+                        else
+                        {
+                            cursors[PlayerOne].CurrentRow++;
+                        }
+                        Debug.Log("Row is now " + cursors[PlayerOne].CurrentRow);
+                    }
+                }
                 currentTime[i] = Time.time;
-               // Debug.Log("Row Depth: " + playerWells[0].RowDepth());
             }
         }
 
         //update cursor positions       
-       for (int i = 0; i < cursors.Length; i++)
-        {
+       /*for (int i = 0; i < cursors.Length; i++)
+       {
             int currentIndex = cursors[i].CurrentIndex;
             int row = cursors[i].CurrentRow;
             int col = cursors[i].CurrentCol;
             float xOffset = -2.5f;
-            float yOffset = -5.9f;
+            float yOffset = -6.4f;
             //cursors[i].transform.position = new Vector3(playerWells[i].blockList[currentIndex].transform.position.x, playerWells[i].blockList[currentIndex].transform.position.y, cursors[i].Z_Value);
-            cursors[i].transform.position = new Vector3(playerWells[i].transform.position.x + col + xOffset, playerWells[i].transform.position.y + row + yOffset, cursors[i].Z_Value);
-        }
+            //cursors[i].transform.position = new Vector3(playerWells[i].transform.position.x + col + xOffset, playerWells[i].transform.position.y + row + yOffset, cursors[i].Z_Value);
+       }*/
 
         //check for block matches, both vertical and horizontal
         CheckForMatches(playerWells[PlayerOne]);
