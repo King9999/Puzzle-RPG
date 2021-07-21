@@ -85,7 +85,7 @@ public class Cursor : MonoBehaviour
         if (Time.time > currentTime + INPUT_DELAY && context.phase == InputActionPhase.Performed)
         {
             currentTime = Time.time;
-            if (/*CurrentRow - 1 >= 0*/CurrentRow + 1 <= GameManager.instance.playerWells[0].TotalRows - 1)
+            if (/*CurrentRow - 1 >= 0*/CurrentRow + 1 < GameManager.instance.playerWells[0].TotalRows - 1)
             {
                 CurrentRow++;
                 transform.position = new Vector3(transform.position.x, transform.position.y + 1, Z_Value);

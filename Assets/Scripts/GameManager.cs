@@ -116,7 +116,7 @@ public class GameManager : MonoBehaviour
                         {
                             //we're at the top of the well; reduce row position and screen position.
                             cursors[i].CurrentRow--;
-                            cursors[i].transform.position = new Vector3(cursors[i].transform.position.x, cursors[i].transform.position.y - 1, cursors[i].Z_Value);
+                            cursors[i].transform.position = new Vector3(cursors[i].transform.position.x, cursors[i].transform.position.y - 2, cursors[i].Z_Value);
                         }
                         else
                         {
